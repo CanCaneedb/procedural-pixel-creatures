@@ -13,56 +13,56 @@ namespace PixelCreatures.Core.Families
     public sealed class AmorphousFamily : CreatureFamilyBase
     {
         public override string Id => "amorphous";
-        public override string DisplayName => "Slimes & Tentacled Creatures";
-        public override string Description => "Slimes, oozes, octopuses, jellyfish, floating eyes and wisps: soft bodies that hop with squash and stretch or float with trailing, spring-simulated tentacles.";
+        public override string DisplayName => "史莱姆与触手生物";
+        public override string Description => "史莱姆、软泥、章鱼、水母、浮空眼与鬼火：柔软的身体靠挤压拉伸跳跃，或带着弹簧模拟的飘逸触手漂浮。";
         public override int Order => 80;
 
         private static readonly ArchetypeInfo[] ArchetypeList =
         {
-            new ArchetypeInfo("slime", "Slime", 1.3),
-            new ArchetypeInfo("ooze", "Ooze", 0.8),
-            new ArchetypeInfo("octopus", "Octopus", 1.0),
-            new ArchetypeInfo("jelly", "Jellyfish", 0.9),
-            new ArchetypeInfo("beholder", "Floating eye", 0.8),
-            new ArchetypeInfo("wisp", "Wisp", 0.7),
+            new ArchetypeInfo("slime", "史莱姆", 1.3),
+            new ArchetypeInfo("ooze", "软泥", 0.8),
+            new ArchetypeInfo("octopus", "章鱼", 1.0),
+            new ArchetypeInfo("jelly", "水母", 0.9),
+            new ArchetypeInfo("beholder", "浮空眼", 0.8),
+            new ArchetypeInfo("wisp", "鬼火", 0.7),
         };
 
         public override IReadOnlyList<ArchetypeInfo> Archetypes => ArchetypeList;
 
         public static readonly (string, string)[] Forms =
         {
-            ("slime", "Slime"), ("ooze", "Ooze"), ("octopus", "Octopus"), ("jelly", "Jellyfish"), ("beholder", "Floating eye"), ("wisp", "Wisp"),
+            ("slime", "史莱姆"), ("ooze", "软泥"), ("octopus", "章鱼"), ("jelly", "水母"), ("beholder", "浮空眼"), ("wisp", "鬼火"),
         };
-        public static readonly (string, string)[] Moves = { ("hop", "Hop"), ("float", "Float"), ("pulse", "Pulse") };
-        public static readonly (string, string)[] EyeStyles = { ("button", "Large & cute"), ("round", "Round"), ("bead", "Beady"), ("glow", "Glowing"), ("slit", "Slit pupils") };
-        public static readonly (string, string)[] MouthKinds = { ("none", "None"), ("small", "Small"), ("wide", "Wide"), ("maw", "Maw") };
-        public static readonly (string, string)[] TeethKinds = { ("none", "None"), ("small", "Small"), ("fangs", "Fangs") };
-        public static readonly (string, string)[] Crowns = { ("none", "None"), ("spikes", "Spikes"), ("crystal", "Crystal"), ("stalks", "Stalks"), ("drip", "Drip") };
+        public static readonly (string, string)[] Moves = { ("hop", "跳跃"), ("float", "漂浮"), ("pulse", "脉动") };
+        public static readonly (string, string)[] EyeStyles = { ("button", "大而可爱"), ("round", "圆"), ("bead", "珠状"), ("glow", "发光"), ("slit", "竖瞳") };
+        public static readonly (string, string)[] MouthKinds = { ("none", "无"), ("small", "小"), ("wide", "宽"), ("maw", "巨口") };
+        public static readonly (string, string)[] TeethKinds = { ("none", "无"), ("small", "小"), ("fangs", "獠牙") };
+        public static readonly (string, string)[] Crowns = { ("none", "无"), ("spikes", "尖刺"), ("crystal", "水晶"), ("stalks", "触柄"), ("drip", "滴垂") };
 
         protected override GeneSchema CreateSchema()
         {
             var b = new GeneSchemaBuilder(Id);
-            b.Group("body", "Body", GeneStream.Anatomy)
-             .Choice("form", "Body type", Forms, "slime", "Archetype used as a template for proportions and features when rerolling.", 0.05)
-             .Float("size", "Size", 0, 1, 0.45, "", 0.08)
-             .Float("body.height", "Body height", 0, 1, 0.5, "Flat puddle to a tall dome.", 0.1)
-             .Float("body.width", "Body width", 0, 1, 0.5, "", 0.1)
-             .Float("body.lumps", "Body lumps", 0, 1, 0.2, "Irregular bulges on the surface.", 0.1)
-             .Choice("move", "Locomotion", Moves, "hop", "", 0.05)
-             .Float("hover", "Hover height", 0, 1, 0.4, "", 0.1);
-            b.Group("face", "Face", GeneStream.Anatomy)
-             .Float("eyes.count", "Eyes count", 0, 1, 0.3, "One, two or three eyes.", 0.1)
-             .Float("eyes.size", "Eyes size", 0, 1, 0.55, "", 0.1)
-             .Choice("eyes.style", "Eyes style", EyeStyles, "button", "", 0.08)
-             .Float("eyes.spacing", "Eyes spacing", 0, 1, 0.5, "", 0.1)
-             .Choice("mouth", "Mouth", MouthKinds, "small", "", 0.1)
-             .Choice("mouth.teeth", "Mouth teeth", TeethKinds, "none", "", 0.1);
-            b.Group("tentacles", "Tentacles", GeneStream.Anatomy)
-             .Float("tentacles.count", "Tentacles count", 0, 1, 0.0, "", 0.1)
-             .Float("tentacles.length", "Tentacles length", 0, 1, 0.5, "", 0.1)
-             .Float("tentacles.thickness", "Tentacles thickness", 0, 1, 0.5, "", 0.1)
-             .Choice("crown", "Crown", Crowns, "none", "", 0.1)
-             .Float("crown.size", "Crown size", 0, 1, 0.5, "", 0.1);
+            b.Group("body", "身体", GeneStream.Anatomy)
+             .Choice("form", "体型", Forms, "slime", "重掷时用作比例与特征模板的原型。", 0.05)
+             .Float("size", "体型", 0, 1, 0.45, "", 0.08)
+             .Float("body.height", "体高", 0, 1, 0.5, "从扁平的水洼到高耸的圆顶。", 0.1)
+             .Float("body.width", "体宽", 0, 1, 0.5, "", 0.1)
+             .Float("body.lumps", "体表凸块", 0, 1, 0.2, "表面不规则的凸起。", 0.1)
+             .Choice("move", "运动方式", Moves, "hop", "", 0.05)
+             .Float("hover", "悬停高度", 0, 1, 0.4, "", 0.1);
+            b.Group("face", "面部", GeneStream.Anatomy)
+             .Float("eyes.count", "眼睛数量", 0, 1, 0.3, "一只、两只或三只眼睛。", 0.1)
+             .Float("eyes.size", "眼睛大小", 0, 1, 0.55, "", 0.1)
+             .Choice("eyes.style", "眼睛样式", EyeStyles, "button", "", 0.08)
+             .Float("eyes.spacing", "眼睛间距", 0, 1, 0.5, "", 0.1)
+             .Choice("mouth", "嘴部", MouthKinds, "small", "", 0.1)
+             .Choice("mouth.teeth", "牙齿", TeethKinds, "none", "", 0.1);
+            b.Group("tentacles", "触手", GeneStream.Anatomy)
+             .Float("tentacles.count", "触手数量", 0, 1, 0.0, "", 0.1)
+             .Float("tentacles.length", "触手长度", 0, 1, 0.5, "", 0.1)
+             .Float("tentacles.thickness", "触手粗细", 0, 1, 0.5, "", 0.1)
+             .Choice("crown", "头冠", Crowns, "none", "", 0.1)
+             .Float("crown.size", "头冠大小", 0, 1, 0.5, "", 0.1);
             SharedGenes.AddColorGenes(b);
             SharedGenes.AddPatternGenes(b, "slime");
             SharedGenes.AddMotionGenes(b);

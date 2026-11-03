@@ -13,58 +13,58 @@ namespace PixelCreatures.Core.Families
     public sealed class SerpentFamily : CreatureFamilyBase
     {
         public override string Id => "serpent";
-        public override string DisplayName => "Serpents & Worms";
-        public override string Description => "Legless snakes, vipers, cobras, constrictors, earthworms and sandworms. Their bodies follow the head trail, slither or crawl with contraction waves, and coil when resting.";
+        public override string DisplayName => "蛇与蠕虫";
+        public override string Description => "无足的蛇、蝰蛇、眼镜蛇、蟒蛇、蚯蚓和沙虫。它们的身体跟随头部轨迹，以收缩波滑行或爬行，休息时盘绕起来。";
         public override int Order => 60;
 
         private static readonly ArchetypeInfo[] ArchetypeList =
         {
-            new ArchetypeInfo("snake", "Snake", 1.1),
-            new ArchetypeInfo("viper", "Viper", 1.0),
-            new ArchetypeInfo("cobra", "Cobra", 0.9),
-            new ArchetypeInfo("constrictor", "Constrictor", 0.9),
-            new ArchetypeInfo("worm", "Worm", 0.9),
-            new ArchetypeInfo("sandworm", "Sandworm", 0.8),
+            new ArchetypeInfo("snake", "蛇", 1.1),
+            new ArchetypeInfo("viper", "蝰蛇", 1.0),
+            new ArchetypeInfo("cobra", "眼镜蛇", 0.9),
+            new ArchetypeInfo("constrictor", "蟒蛇", 0.9),
+            new ArchetypeInfo("worm", "蠕虫", 0.9),
+            new ArchetypeInfo("sandworm", "沙虫", 0.8),
         };
 
         public override IReadOnlyList<ArchetypeInfo> Archetypes => ArchetypeList;
 
         public static readonly (string, string)[] Forms =
         {
-            ("snake", "Snake"), ("viper", "Viper"), ("cobra", "Cobra"), ("constrictor", "Constrictor"), ("worm", "Worm"), ("sandworm", "Sandworm"),
+            ("snake", "蛇"), ("viper", "蝰蛇"), ("cobra", "眼镜蛇"), ("constrictor", "蟒蛇"), ("worm", "蠕虫"), ("sandworm", "沙虫"),
         };
-        public static readonly (string, string)[] Gaits = { ("lateral", "Lateral"), ("rectilinear", "Rectilinear") };
-        public static readonly (string, string)[] HeadShapes = { ("round", "Round"), ("triangular", "Triangular"), ("blunt", "Blunt"), ("maw", "Maw") };
-        public static readonly (string, string)[] TeethKinds = { ("none", "None"), ("small", "Small"), ("fangs", "Fangs"), ("ring", "Ring") };
-        public static readonly (string, string)[] EyeStyles = { ("slit", "Slit pupils"), ("round", "Round"), ("bead", "Beady"), ("glow", "Glowing"), ("none", "None") };
-        public static readonly (string, string)[] HornKinds = { ("none", "None"), ("brow", "Brow"), ("nasal", "Nasal") };
-        public static readonly (string, string)[] TailTips = { ("plain", "Plain"), ("rattle", "Rattle"), ("spike", "Spike"), ("fin", "Fin"), ("blunt", "Blunt") };
+        public static readonly (string, string)[] Gaits = { ("lateral", "侧行"), ("rectilinear", "直行") };
+        public static readonly (string, string)[] HeadShapes = { ("round", "圆"), ("triangular", "三角"), ("blunt", "钝形"), ("maw", "巨口") };
+        public static readonly (string, string)[] TeethKinds = { ("none", "无"), ("small", "小"), ("fangs", "獠牙"), ("ring", "环齿") };
+        public static readonly (string, string)[] EyeStyles = { ("slit", "竖瞳"), ("round", "圆"), ("bead", "珠状"), ("glow", "发光"), ("none", "无") };
+        public static readonly (string, string)[] HornKinds = { ("none", "无"), ("brow", "眉角"), ("nasal", "鼻角") };
+        public static readonly (string, string)[] TailTips = { ("plain", "素色"), ("rattle", "响环"), ("spike", "尖刺"), ("fin", "鳍"), ("blunt", "钝形") };
 
         protected override GeneSchema CreateSchema()
         {
             var b = new GeneSchemaBuilder(Id);
-            b.Group("body", "Body", GeneStream.Anatomy)
-             .Choice("form", "Body type", Forms, "snake", "Archetype used as a template for proportions and features when rerolling.", 0.05)
-             .Float("size", "Size", 0, 1, 0.5, "", 0.08)
-             .Float("body.thickness", "Body thickness", 0, 1, 0.45, "", 0.1)
-             .Float("body.taper", "Body taper", 0, 1, 0.55, "How sharply the tail tapers.", 0.1)
-             .Float("body.segments", "Body segments", 0, 1, 0.1, "Visible body rings in worms.", 0.1)
-             .Choice("body.gait", "Body gait", Gaits, "lateral", "Slithering for snakes or crawling with contraction waves for worms.", 0.05)
-             .Float("body.raise", "Body raise", 0, 1, 0.2, "Height of the front of the body.", 0.1);
-            b.Group("head", "Head", GeneStream.Anatomy)
-             .Float("head.size", "Head size", 0, 1, 0.5, "", 0.1)
-             .Choice("head.shape", "Head shape", HeadShapes, "round", "", 0.08)
-             .Float("head.jaw", "Head jaw", 0, 1, 0.5, "", 0.1)
-             .Choice("head.teeth", "Head teeth", TeethKinds, "small", "", 0.1)
-             .Float("head.eyeSize", "Head eye size", 0, 1, 0.5, "", 0.1)
-             .Choice("head.eyeStyle", "Head eye style", EyeStyles, "slit", "", 0.08)
-             .Float("head.hood", "Head hood", 0, 1, 0.0, "Cobra hood.", 0.1)
-             .Choice("head.horns", "Head horns", HornKinds, "none", "", 0.1)
-             .Float("head.hornSize", "Head horn size", 0, 1, 0.5, "", 0.1)
-             .Bool("head.tongue", "Head tongue", true, "Tongue flicking while idle.", 0.05);
-            b.Group("tail", "Tail", GeneStream.Anatomy)
-             .Choice("tail.tip", "Tail tip", TailTips, "plain", "", 0.1)
-             .Float("back.spikes", "Back spikes", 0, 1, 0.0, "", 0.1);
+            b.Group("body", "身体", GeneStream.Anatomy)
+             .Choice("form", "体型", Forms, "snake", "重掷时用作比例与特征模板的原型。", 0.05)
+             .Float("size", "体型", 0, 1, 0.5, "", 0.08)
+             .Float("body.thickness", "体粗", 0, 1, 0.45, "", 0.1)
+             .Float("body.taper", "身体收窄", 0, 1, 0.55, "尾部收窄的急剧程度。", 0.1)
+             .Float("body.segments", "体节", 0, 1, 0.1, "蠕虫身上可见的体环。", 0.1)
+             .Choice("body.gait", "步态", Gaits, "lateral", "蛇类滑行，或蠕虫以收缩波爬行。", 0.05)
+             .Float("body.raise", "身体抬高", 0, 1, 0.2, "身体前段抬起的高度。", 0.1);
+            b.Group("head", "头部", GeneStream.Anatomy)
+             .Float("head.size", "头部大小", 0, 1, 0.5, "", 0.1)
+             .Choice("head.shape", "头型", HeadShapes, "round", "", 0.08)
+             .Float("head.jaw", "下颌", 0, 1, 0.5, "", 0.1)
+             .Choice("head.teeth", "牙齿", TeethKinds, "small", "", 0.1)
+             .Float("head.eyeSize", "眼睛大小", 0, 1, 0.5, "", 0.1)
+             .Choice("head.eyeStyle", "眼睛样式", EyeStyles, "slit", "", 0.08)
+             .Float("head.hood", "头罩", 0, 1, 0.0, "眼镜蛇的头罩。", 0.1)
+             .Choice("head.horns", "角", HornKinds, "none", "", 0.1)
+             .Float("head.hornSize", "角大小", 0, 1, 0.5, "", 0.1)
+             .Bool("head.tongue", "舌头", true, "闲置时吐信。", 0.05);
+            b.Group("tail", "尾巴", GeneStream.Anatomy)
+             .Choice("tail.tip", "尾尖", TailTips, "plain", "", 0.1)
+             .Float("back.spikes", "背刺", 0, 1, 0.0, "", 0.1);
             SharedGenes.AddColorGenes(b);
             SharedGenes.AddPatternGenes(b, "scales");
             SharedGenes.AddMotionGenes(b);

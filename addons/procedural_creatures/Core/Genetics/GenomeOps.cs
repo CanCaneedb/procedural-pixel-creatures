@@ -176,12 +176,12 @@ namespace PixelCreatures.Core.Genetics
         {
             if (a.FamilyId != b.FamilyId)
             {
-                reason = $"Incompatible body plans: '{a.FamilyId}' and '{b.FamilyId}' cannot be crossed.";
+                reason = $"体型类别不兼容：'{a.FamilyId}' 与 '{b.FamilyId}' 无法杂交。";
                 return false;
             }
             if (a.Schema.Fingerprint() != b.Schema.Fingerprint())
             {
-                reason = "The genomes use different schema versions.";
+                reason = "两个基因组的结构定义版本不同。";
                 return false;
             }
             reason = string.Empty;

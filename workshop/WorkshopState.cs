@@ -87,7 +87,7 @@ namespace PixelCreatures.Workshop
             Registry = registry;
             Genome = initial;
             SavedGenome = initial;
-            History.Reset(initial, "Start");
+            History.Reset(initial, "起始");
         }
 
         public ICreatureFamily Family => Registry.GetFamily(Genome.FamilyId);
@@ -117,13 +117,13 @@ namespace PixelCreatures.Workshop
             // locks only make sense within one family
             if (familyId != Genome.FamilyId) Locks.Clear();
             else if (!Locks.IsEmpty) g = GenomeFactory.RegenerateUnlocked(Family, Genome, Locks, seed);
-            Set(g, $"New creature (seed {seed})");
+            Set(g, $"新生物（种子 {seed}）");
         }
 
         public void RegenerateUnlocked(ulong seed)
         {
             var g = GenomeFactory.RegenerateUnlocked(Family, Genome, Locks, seed);
-            Set(g, $"Rerolled unlocked traits (seed {seed})");
+            Set(g, $"已重掷未锁定的特征（种子 {seed}）");
         }
 
         public bool Undo()
@@ -131,7 +131,7 @@ namespace PixelCreatures.Workshop
             var g = History.Undo();
             if (g == null) return false;
             Genome = g;
-            GenomeChanged?.Invoke("Undo");
+            GenomeChanged?.Invoke("撤销");
             return true;
         }
 
@@ -140,7 +140,7 @@ namespace PixelCreatures.Workshop
             var g = History.Redo();
             if (g == null) return false;
             Genome = g;
-            GenomeChanged?.Invoke("Redo");
+            GenomeChanged?.Invoke("重做");
             return true;
         }
 
@@ -148,7 +148,7 @@ namespace PixelCreatures.Workshop
         {
             SavedGenome = Genome;
             SavedPath = path;
-            GenomeChanged?.Invoke("Saved");
+            GenomeChanged?.Invoke("已保存");
         }
 
         /// <summary>Loads a genome as the new saved state (e.g. from a preset or gallery).</summary>
@@ -162,7 +162,7 @@ namespace PixelCreatures.Workshop
 
         public void ResetToSaved()
         {
-            Set(SavedGenome, "Reset to the saved state");
+            Set(SavedGenome, "重置为已保存的状态");
         }
 
         public void SetLock(string? gene, string? group, bool locked)

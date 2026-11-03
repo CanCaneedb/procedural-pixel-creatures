@@ -93,73 +93,73 @@ namespace PixelCreatures.Core.Genetics
     {
         public static readonly (string id, string label)[] Schemes =
         {
-            ("natural", "Natural"), ("analogous", "Analogous"), ("complementary", "Complementary"),
-            ("triadic", "Triadic"), ("split", "Split complementary"), ("monochrome", "Monochrome"),
+            ("natural", "自然"), ("analogous", "邻近色"), ("complementary", "互补色"),
+            ("triadic", "三角配色"), ("split", "分裂互补"), ("monochrome", "单色"),
         };
 
         public static readonly (string id, string label)[] Accents =
         {
-            ("bone", "Bone / ivory"), ("dark", "Dark"), ("vivid", "Vivid"), ("gold", "Gold"),
+            ("bone", "骨白色"), ("dark", "深色"), ("vivid", "鲜亮"), ("gold", "金色"),
         };
 
         public static readonly (string id, string label)[] Materials =
         {
-            ("fur", "Fur"), ("hide", "Hide"), ("scales", "Scales"), ("chitin", "Chitin"), ("stone", "Stone"),
-            ("slime", "Slime"), ("feather", "Feather"), ("bark", "Bark"), ("leaf", "Leaf"),
+            ("fur", "毛皮"), ("hide", "皮革"), ("scales", "鳞片"), ("chitin", "甲壳质"), ("stone", "石质"),
+            ("slime", "黏液"), ("feather", "羽毛"), ("bark", "树皮"), ("leaf", "叶片"),
         };
 
         public static readonly (string id, string label)[] Patterns =
         {
-            ("none", "None"), ("stripes", "Stripes"), ("spots", "Spots"), ("rosettes", "Rosettes"),
-            ("saddle", "Saddle"), ("dorsal", "Dorsal"), ("mottled", "Mottled"), ("bands", "Bands"),
-            ("blotches", "Blotches"),
+            ("none", "无"), ("stripes", "条纹"), ("spots", "斑点"), ("rosettes", "花斑"),
+            ("saddle", "鞍形斑"), ("dorsal", "背脊纹"), ("mottled", "斑驳"), ("bands", "横带"),
+            ("blotches", "大斑块"),
         };
 
         public static void AddColorGenes(GeneSchemaBuilder b)
         {
-            b.Group("palette", "Color", GeneStream.Color)
-             .Hue("color.hue", "Base hue", 30, "Hue of the main color in OKLCH.")
-             .Float("color.saturation", "Saturation", 0, 1, 0.45, "Chroma of the main color.", 0.14)
-             .Float("color.value", "Brightness", 0, 1, 0.5, "Brightness of the main color.", 0.12)
-             .Choice("color.scheme", "Color scheme", Schemes, "natural", "Relationship of belly, marking and accent colors to the main color.", 0.15)
-             .Float("color.secondaryShift", "Secondary hue shift", -1, 1, 0, "Fine adjustment of the secondary hue within the color scheme.", 0.2, unit: DisplayUnit.Plain)
-             .Float("color.bellyLight", "Belly brightness", 0, 1, 0.5, "Brightness of the belly and light markings.", 0.12)
-             .Float("color.markingDark", "Marking contrast", 0, 1, 0.5, "Darkness and contrast of dark markings.", 0.12)
-             .Choice("color.accent", "Horn & claw material", Accents, "bone", "Material of horns, claws, spines and beaks.", 0.12)
-             .Hue("color.eyeHue", "Color eye hue", 50, "Iris hue.")
-             .Float("color.glow", "Color glow", 0, 1, 0, "Intensity of luminous parts and glowing eyes.", 0.12)
-             .Float("color.hueShift", "Shading hue shift", 0, 1, 0.6, "Warmer highlights and cooler shadows in classic pixel-art color ramps.", 0.1)
-             .Float("color.outline", "Outline darkness", 0, 1, 0.55, "Darkness of the outer outline.", 0.1);
+            b.Group("palette", "颜色", GeneStream.Color)
+             .Hue("color.hue", "主色相", 30, "主色在 OKLCH 中的色相。")
+             .Float("color.saturation", "饱和度", 0, 1, 0.45, "主色的彩度。", 0.14)
+             .Float("color.value", "明度", 0, 1, 0.5, "主色的明度。", 0.12)
+             .Choice("color.scheme", "配色方案", Schemes, "natural", "腹部、斑纹与点缀色相对主色的关系。", 0.15)
+             .Float("color.secondaryShift", "次色相偏移", -1, 1, 0, "在配色方案内对次色相做微调。", 0.2, unit: DisplayUnit.Plain)
+             .Float("color.bellyLight", "腹部明度", 0, 1, 0.5, "腹部与浅色斑纹的明度。", 0.12)
+             .Float("color.markingDark", "斑纹对比度", 0, 1, 0.5, "深色斑纹的暗度与对比度。", 0.12)
+             .Choice("color.accent", "角与爪材质", Accents, "bone", "角、爪、棘刺与喙的材质。", 0.12)
+             .Hue("color.eyeHue", "眼睛色相", 50, "虹膜的色相。")
+             .Float("color.glow", "自发光", 0, 1, 0, "发光部位与发光眼睛的强度。", 0.12)
+             .Float("color.hueShift", "明暗色相偏移", 0, 1, 0.6, "经典像素画色阶中较暖的高光与较冷的阴影。", 0.1)
+             .Float("color.outline", "描边暗度", 0, 1, 0.55, "外描边的暗度。", 0.1);
         }
 
         public static void AddPatternGenes(GeneSchemaBuilder b, string defaultMaterial)
         {
-            b.Group("pattern", "Pattern & material", GeneStream.Pattern)
-             .Choice("surface.material", "Surface material", Materials, defaultMaterial, "Surface character: fur, scales, chitin, stone and more.", 0.08)
-             .Float("surface.texture", "Surface texture", 0, 1, 0.5, "Microtexture strength: scale rows, fur strands and plates.", 0.12)
-             .Choice("pattern.type", "Pattern type", Patterns, "none", "Type of body-anchored markings.", 0.12)
-             .Float("pattern.size", "Pattern size", 0, 1, 0.5, "Size of the markings.", 0.12)
-             .Float("pattern.density", "Pattern density", 0, 1, 0.5, "Area covered by markings.", 0.12)
-             .Bool("pattern.dark", "Pattern dark", true, "Dark markings when enabled, light markings when disabled.", 0.08)
-             .Float("pattern.countershade", "Countershading", 0, 1, 0.5, "Extent of the lighter underside.", 0.12)
-             .Float("pattern.tips", "Pattern tips", 0, 1, 0, "Contrasting tail, ear and foot tips.", 0.12)
-             .Float("pattern.muzzle", "Pattern muzzle", 0, 1, 0, "Lighter muzzle area.", 0.12)
-             .Float("pattern.socks", "Pattern socks", 0, 1, 0, "Contrasting lower legs: socks or stockings.", 0.12)
-             .Bool("pattern.socksLight", "Pattern socks light", true, "White socks when enabled, dark stockings when disabled.", 0.08)
-             .Float("pattern.mask", "Pattern mask", 0, 1, 0, "Dark mask across the eyes.", 0.12)
-             .Float("pattern.piebald", "Piebald patches", 0, 1, 0, "Large white patches with distinct edges.", 0.12);
+            b.Group("pattern", "花纹与材质", GeneStream.Pattern)
+             .Choice("surface.material", "表面材质", Materials, defaultMaterial, "表面质感：毛皮、鳞片、甲壳质、石质等。", 0.08)
+             .Float("surface.texture", "表面纹理", 0, 1, 0.5, "细微纹理强度：鳞列、毛丝与甲片。", 0.12)
+             .Choice("pattern.type", "花纹类型", Patterns, "none", "附着于身体的花纹类型。", 0.12)
+             .Float("pattern.size", "花纹大小", 0, 1, 0.5, "花纹的尺寸。", 0.12)
+             .Float("pattern.density", "花纹密度", 0, 1, 0.5, "花纹覆盖的面积。", 0.12)
+             .Bool("pattern.dark", "深色花纹", true, "开启时为深色花纹，关闭时为浅色花纹。", 0.08)
+             .Float("pattern.countershade", "反荫蔽", 0, 1, 0.5, "腹部浅色区域的范围。", 0.12)
+             .Float("pattern.tips", "末梢花纹", 0, 1, 0, "尾巴、耳朵与足端的对比色。", 0.12)
+             .Float("pattern.muzzle", "口鼻花纹", 0, 1, 0, "较浅的口鼻区域。", 0.12)
+             .Float("pattern.socks", "腿部花纹", 0, 1, 0, "小腿的对比色：短袜或长袜。", 0.12)
+             .Bool("pattern.socksLight", "浅色腿纹", true, "开启时为白色短袜，关闭时为深色长袜。", 0.08)
+             .Float("pattern.mask", "眼罩斑纹", 0, 1, 0, "横跨眼部的深色眼罩。", 0.12)
+             .Float("pattern.piebald", "白斑", 0, 1, 0, "边缘分明的大块白色斑块。", 0.12);
         }
 
         public static void AddMotionGenes(GeneSchemaBuilder b)
         {
-            b.Group("motion", "Motion", GeneStream.Motion)
-             .Float("motion.energy", "Energy", 0, 1, 0.5, "Liveliness: idle movement speed and frequency of small gestures.", 0.12)
-             .Float("motion.weight", "Weight", 0, 1, 0.5, "Perceived weight: compression, anticipation and follow-through.", 0.12)
-             .Float("motion.stiffness", "Motion stiffness", 0, 1, 0.5, "Spring stiffness of tails, ears and soft appendages.", 0.12)
-             .Float("motion.bounce", "Bounce", 0, 1, 0.5, "Vertical movement and squash-and-stretch strength.", 0.12)
-             .Float("motion.aggression", "Motion aggression", 0, 1, 0.5, "Intensity of actions and facial expression.", 0.12)
-             .Float("motion.curiosity", "Motion curiosity", 0, 1, 0.5, "Frequency of looking around, ear flicks and sniffing.", 0.12)
-             .Float("motion.speed", "Motion speed", 0, 1, 0.5, "Relative maximum speed.", 0.1);
+            b.Group("motion", "动作", GeneStream.Motion)
+             .Float("motion.energy", "活力", 0, 1, 0.5, "活跃度：待机动作速度与小动作的频率。", 0.12)
+             .Float("motion.weight", "重量感", 0, 1, 0.5, "感知重量：压缩、预备与跟随动作。", 0.12)
+             .Float("motion.stiffness", "动作刚度", 0, 1, 0.5, "尾巴、耳朵与柔软附肢的弹性刚度。", 0.12)
+             .Float("motion.bounce", "弹跳", 0, 1, 0.5, "垂直起伏与挤压拉伸的强度。", 0.12)
+             .Float("motion.aggression", "攻击性", 0, 1, 0.5, "动作与面部表情的强度。", 0.12)
+             .Float("motion.curiosity", "好奇心", 0, 1, 0.5, "四处张望、抖耳与嗅探的频率。", 0.12)
+             .Float("motion.speed", "动作速度", 0, 1, 0.5, "相对最大速度。", 0.1);
         }
 
         private static string PickWeighted(Rng rng, Dictionary<string, double> weights, (string id, string label)[] options)

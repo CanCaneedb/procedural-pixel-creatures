@@ -371,7 +371,7 @@ namespace PixelCreatures.Workshop
                     var e = g.Entries[i];
                     if (g.ShowNames && r.Size.X >= 60)
                     {
-                        string name = string.IsNullOrEmpty(e.Genome.Name) ? "(unnamed)" : e.Genome.Name;
+                        string name = string.IsNullOrEmpty(e.Genome.Name) ? "（未命名）" : e.Genome.Name;
                         string text = r.Size.X >= 150 ? $"{name} · {e.ArchetypeLabel}" : name;
                         var pos = new Vector2(r.Position.X + 4, r.End.Y - 5);
                         DrawRect(new Rect2(r.Position.X, r.End.Y - fs - 6, r.Size.X - 1, fs + 5), new Color(0, 0, 0, 0.42f));

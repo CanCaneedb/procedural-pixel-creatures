@@ -19,9 +19,39 @@ namespace PixelCreatures.Workshop
         public static readonly Color Bad = Color.Color8(226, 104, 96);
         public static readonly Color Info = Color.Color8(120, 176, 226);
 
+        /// <summary>
+        /// UI font. The engine's default font (Open Sans SemiBold) has no CJK glyphs, so the Chinese
+        /// interface would depend on the system font fallback - or show empty boxes if it is unavailable.
+        /// A system font with a CJK-capable family is used instead: the first family installed on the
+        /// machine wins, the rest serve as fallbacks, and allow_system_fallback covers the remaining gaps.
+        /// </summary>
+        public static Font CreateUiFont()
+        {
+            return new SystemFont
+            {
+                FontNames = new[]
+                {
+                    "Microsoft YaHei UI", "Microsoft YaHei", "Noto Sans SC", "Noto Sans CJK SC",
+                    "Source Han Sans SC", "PingFang SC", "Hiragino Sans GB", "Segoe UI", "Arial", "sans-serif",
+                },
+                AllowSystemFallback = true,
+            };
+        }
+
+        /// <summary>
+        /// Makes the UI font the global fallback as well, so tooltips, popups and dialogs that are not
+        /// children of the themed root control still get a font that can render Chinese.
+        /// </summary>
+        public static void InstallFallbackFont()
+        {
+            ThemeDB.FallbackFont = CreateUiFont();
+        }
+
         public static Theme CreateTheme()
         {
+            InstallFallbackFont();
             var t = new Theme();
+            t.DefaultFont = CreateUiFont();
             t.DefaultFontSize = 14;
             StyleBoxFlat Box(Color c, int border = 0, Color? bc = null, int radius = 3, int margin = 6)
             {

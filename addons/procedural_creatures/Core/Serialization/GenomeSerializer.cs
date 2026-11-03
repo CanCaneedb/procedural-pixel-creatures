@@ -46,10 +46,10 @@ namespace PixelCreatures.Core.Serialization
         public string Describe()
         {
             var parts = new List<string>();
-            if (Errors.Count > 0) parts.Add("Errors: " + string.Join(" | ", Errors));
-            if (Warnings.Count > 0) parts.Add("Warnings: " + string.Join(" | ", Warnings));
-            if (Migrations.Count > 0) parts.Add("Migration: " + string.Join(" | ", Migrations));
-            return parts.Count == 0 ? "OK" : string.Join("\n", parts);
+            if (Errors.Count > 0) parts.Add("错误：" + string.Join(" | ", Errors));
+            if (Warnings.Count > 0) parts.Add("警告：" + string.Join(" | ", Warnings));
+            if (Migrations.Count > 0) parts.Add("迁移：" + string.Join(" | ", Migrations));
+            return parts.Count == 0 ? "正常" : string.Join("\n", parts);
         }
     }
 
@@ -153,34 +153,34 @@ namespace PixelCreatures.Core.Serialization
             }
             catch (JsonException e)
             {
-                result.Errors.Add($"Invalid JSON: {e.Message}");
+                result.Errors.Add($"JSON 无效：{e.Message}");
                 return result;
             }
             if (node is not JsonObject root)
             {
-                result.Errors.Add("The file does not contain a JSON object.");
+                result.Errors.Add("文件中没有 JSON 对象。");
                 return result;
             }
             string? format = GetString(root, "format");
             if (format != FormatId)
             {
-                result.Errors.Add(format == null ? "Missing 'format' field: not a creature file." : $"Unknown file format '{format}' (expected '{FormatId}').");
+                result.Errors.Add(format == null ? "缺少 'format' 字段：这不是生物文件。" : $"未知的文件格式 '{format}'（应为 '{FormatId}'）。");
                 return result;
             }
             if (!TryGetInt(root, "formatVersion", out int fileVersion))
             {
-                result.Errors.Add("The 'formatVersion' field is missing or is not an integer.");
+                result.Errors.Add("缺少 'formatVersion' 字段，或它不是整数。");
                 return result;
             }
             result.FileFormatVersion = fileVersion;
             if (fileVersion > CurrentFormatVersion)
             {
-                result.Errors.Add($"The file uses format version {fileVersion}; this installation supports up to {CurrentFormatVersion}. Please update the framework.");
+                result.Errors.Add($"文件使用的格式版本为 {fileVersion}；本安装最高支持 {CurrentFormatVersion}。请更新框架。");
                 return result;
             }
             if (fileVersion < 0)
             {
-                result.Errors.Add($"Invalid format version {fileVersion}.");
+                result.Errors.Add($"无效的格式版本 {fileVersion}。");
                 return result;
             }
             // migrations: fileVersion -> current, one step at a time
@@ -189,13 +189,13 @@ namespace PixelCreatures.Core.Serialization
             {
                 if (!_migrations.TryGetValue(v, out var m))
                 {
-                    result.Errors.Add($"No migration from format version {v} to {v + 1} is available.");
+                    result.Errors.Add($"没有从格式版本 {v} 迁移到 {v + 1} 的方案。");
                     return result;
                 }
                 try { m.Apply(root); }
                 catch (Exception e)
                 {
-                    result.Errors.Add($"Migration {v}->{v + 1} failed: {e.Message}");
+                    result.Errors.Add($"从格式版本 {v} 迁移到 {v + 1} 失败：{e.Message}");
                     return result;
                 }
                 result.Migrations.Add($"{v}->{v + 1}: {m.Description}");
@@ -205,26 +205,26 @@ namespace PixelCreatures.Core.Serialization
 
             if (!TryGetInt(root, "generatorVersion", out int genVersion) || genVersion < 1)
             {
-                result.Errors.Add("The 'generatorVersion' field is missing or invalid.");
+                result.Errors.Add("缺少 'generatorVersion' 字段，或该字段无效。");
                 return result;
             }
             if (genVersion > CreatureFramework.GeneratorVersion)
             {
-                result.Errors.Add($"The creature was generated with generator version {genVersion}; this installation supports up to {CreatureFramework.GeneratorVersion}. It cannot be reproduced exactly.");
+                result.Errors.Add($"这个生物由生成器版本 {genVersion} 生成；本安装最高支持 {CreatureFramework.GeneratorVersion}，无法精确重现。");
                 return result;
             }
             if (genVersion < CreatureFramework.GeneratorVersion)
-                result.Warnings.Add($"Generator version {genVersion} is older than the current version ({CreatureFramework.GeneratorVersion}); appearance may differ.");
+                result.Warnings.Add($"生成器版本 {genVersion} 低于当前版本（{CreatureFramework.GeneratorVersion}），外观可能不同。");
 
             string? familyId = GetString(root, "family");
             if (string.IsNullOrWhiteSpace(familyId))
             {
-                result.Errors.Add("Missing 'family' field.");
+                result.Errors.Add("缺少 'family' 字段。");
                 return result;
             }
             if (!_registry.TryGetFamily(familyId, out var family))
             {
-                result.Errors.Add($"Unknown body-plan family '{familyId}'. Is the corresponding extension installed?");
+                result.Errors.Add($"未知的体型类别 '{familyId}'。是否安装了对应的扩展？");
                 return result;
             }
 
@@ -232,7 +232,7 @@ namespace PixelCreatures.Core.Serialization
             var seeds = new ulong[4];
             if (root["seeds"] is not JsonObject seedObj)
             {
-                result.Errors.Add("The 'seeds' field is missing or is not an object.");
+                result.Errors.Add("缺少 'seeds' 字段，或它不是对象。");
                 return result;
             }
             string[] seedNames = { "anatomy", "color", "pattern", "motion" };
@@ -248,7 +248,7 @@ namespace PixelCreatures.Core.Serialization
             // genes
             if (root["genes"] is not JsonObject geneObj)
             {
-                result.Errors.Add("The 'genes' field is missing or is not an object.");
+                result.Errors.Add("缺少 'genes' 字段，或它不是对象。");
                 return result;
             }
             var schema = family.Schema;
@@ -261,13 +261,13 @@ namespace PixelCreatures.Core.Serialization
                 string id = kv.Key;
                 if (aliases != null && aliases.TryGetValue(id, out var renamed))
                 {
-                    result.Migrations.Add($"Gene '{id}' has been renamed to '{renamed}'.");
+                    result.Migrations.Add($"基因 '{id}' 已更名为 '{renamed}'。");
                     id = renamed;
                 }
                 int idx = schema.IndexOf(id);
                 if (idx < 0)
                 {
-                    result.Warnings.Add($"Unknown gene '{kv.Key}' was ignored.");
+                    result.Warnings.Add($"未知的基因 '{kv.Key}' 已被忽略。");
                     continue;
                 }
                 seen.Add(id);
@@ -284,11 +284,11 @@ namespace PixelCreatures.Core.Serialization
                 values[idx] = def.Quantize(val);
             }
             foreach (var def in schema.Genes)
-                if (!seen.Contains(def.Id)) result.Warnings.Add($"Gene '{def.Id}' was missing and has been set to its default.");
+                if (!seen.Contains(def.Id)) result.Warnings.Add($"缺少基因 '{def.Id}'，已设为默认值。");
             if (result.Errors.Count > 0) return result;
 
             string name = GetString(root, "name") ?? string.Empty;
-            if (name.Length > 64) { name = name.Substring(0, 64); result.Warnings.Add("Name was truncated to 64 characters."); }
+            if (name.Length > 64) { name = name.Substring(0, 64); result.Warnings.Add("名称已截断为 64 个字符。"); }
             var lineage = ReadLineage(root["lineage"] as JsonObject);
             result.Genome = new CreatureGenome(schema, genVersion, seeds, values, name, lineage);
             if (root["meta"] is JsonObject metaObj)
@@ -308,7 +308,7 @@ namespace PixelCreatures.Core.Serialization
             fatal = false;
             if (node is not JsonValue jv)
             {
-                problem = $"Gene '{def.Id}': Value is missing or has the wrong type.";
+                problem = $"基因 '{def.Id}'：缺少该值，或类型不正确。";
                 fatal = true;
                 return false;
             }
@@ -318,14 +318,14 @@ namespace PixelCreatures.Core.Serialization
                 {
                     if (!jv.TryGetValue(out string? s) || s == null)
                     {
-                        problem = $"Gene '{def.Id}': Expected a choice value as text.";
+                        problem = $"基因 '{def.Id}'：选项值应为文本。";
                         fatal = true;
                         return false;
                     }
                     int i = def.OptionIndex(s);
                     if (i < 0)
                     {
-                        problem = $"Gene '{def.Id}': Unknown option '{s}'; using default '{def.Options[(int)def.Default].Id}'.";
+                        problem = $"基因 '{def.Id}'：未知选项 '{s}'；改用默认值 '{def.Options[(int)def.Default].Id}'。";
                         return false;
                     }
                     value = i;
@@ -334,7 +334,7 @@ namespace PixelCreatures.Core.Serialization
                 case GeneKind.Bool:
                 {
                     if (jv.TryGetValue(out bool b)) { value = b ? 1 : 0; return true; }
-                    problem = $"Gene '{def.Id}': Expected a Boolean (true/false).";
+                    problem = $"基因 '{def.Id}'：应为布尔值（true/false）。";
                     fatal = true;
                     return false;
                 }
@@ -346,27 +346,27 @@ namespace PixelCreatures.Core.Serialization
                         if (jv.TryGetValue(out int iv)) d = iv;
                         else
                         {
-                            problem = $"Gene '{def.Id}': Expected a number.";
+                            problem = $"基因 '{def.Id}'：应为数字。";
                             fatal = true;
                             return false;
                         }
                     }
                     if (!DMath.IsFinite(d))
                     {
-                        problem = $"Gene '{def.Id}': Value is not a finite number.";
+                        problem = $"基因 '{def.Id}'：数值不是有限数。";
                         fatal = true;
                         return false;
                     }
                     if (def.Kind == GeneKind.Int && Math.Abs(d - Math.Round(d)) > 1e-9)
                     {
-                        problem = $"Gene '{def.Id}': Expected an integer; rounded {d.ToString(CultureInfo.InvariantCulture)}.";
+                        problem = $"基因 '{def.Id}'：应为整数；已四舍五入为 {d.ToString(CultureInfo.InvariantCulture)}。";
                         value = Math.Round(d);
                         return false;
                     }
                     value = d;
                     if (d < def.Min - 1e-9 || d > def.Max + 1e-9)
                     {
-                        problem = $"Gene '{def.Id}': {d.ToString(CultureInfo.InvariantCulture)} is outside [{def.Min.ToString(CultureInfo.InvariantCulture)}, {def.Max.ToString(CultureInfo.InvariantCulture)}] and was clamped.";
+                        problem = $"基因 '{def.Id}'：{d.ToString(CultureInfo.InvariantCulture)} 超出 [{def.Min.ToString(CultureInfo.InvariantCulture)}, {def.Max.ToString(CultureInfo.InvariantCulture)}]，已截断到范围内。";
                         return false;
                     }
                     return true;
@@ -412,17 +412,17 @@ namespace PixelCreatures.Core.Serialization
             var node = o[key];
             if (node is not JsonValue v)
             {
-                error = $"Seed '{key}' is missing.";
+                error = $"缺少种子 '{key}'。";
                 return false;
             }
             if (v.TryGetValue(out string? s) && s != null)
             {
                 if (ulong.TryParse(s.Trim(), NumberStyles.None, CultureInfo.InvariantCulture, out seed)) return true;
-                error = $"Seed '{key}' is not an unsigned 64-bit integer: '{s}'.";
+                error = $"种子 '{key}' 不是 64 位无符号整数：'{s}'。";
                 return false;
             }
             if (v.TryGetValue(out long l) && l >= 0) { seed = (ulong)l; return true; }
-            error = $"Seed '{key}' must be supplied as a decimal number in a string.";
+            error = $"种子 '{key}' 必须以字符串形式的十进制数提供。";
             return false;
         }
     }

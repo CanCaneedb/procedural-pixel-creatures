@@ -40,7 +40,7 @@ namespace PixelCreatures.Workshop
                         string path = $"{root}/{fam}/{file}";
                         var res = CreatureRuntime.LoadPreset(path);
                         if (res.Ok) _builtIn.Add(new Entry { Genome = res.Genome!, Path = path, BuiltIn = true });
-                        else GD.PushWarning($"Sample {path} could not be loaded: {res.Describe()}");
+                        else GD.PushWarning($"样本 {path} 无法载入：{res.Describe()}");
                     }
             }
             return _builtIn;
@@ -82,18 +82,18 @@ namespace PixelCreatures.Workshop
             var controls = new HBoxContainer();
             controls.AddThemeConstantOverride("separation", 6);
             _mode = new OptionButton { FocusMode = FocusModeEnum.None };
-            _mode.AddItem("Sample genomes (curated)");
-            _mode.AddItem("Fixed random sample (uncurated)");
-            _mode.AddItem("User presets (user://presets)");
+            _mode.AddItem("样本基因库（人工筛选）");
+            _mode.AddItem("固定随机样本（未筛选）");
+            _mode.AddItem("用户预设（user://presets）");
             _mode.ItemSelected += _ => Rebuild();
             _family = new OptionButton { FocusMode = FocusModeEnum.None };
-            _family.AddItem("All families");
+            _family.AddItem("全部类别");
             foreach (var f in CreatureRuntime.Registry.Families) _family.AddItem(f.DisplayName);
             _family.ItemSelected += _ => Rebuild();
             controls.AddChild(_mode);
             controls.AddChild(_family);
-            controls.AddChild(UiKit.Button("Refresh", Rebuild, "Reload the list"));
-            _hint = UiKit.Label("Click a creature to load it into the editor.", 12, UiKit.TextDim);
+            controls.AddChild(UiKit.Button("刷新", Rebuild, "重新载入列表"));
+            _hint = UiKit.Label("单击一个生物即可载入编辑器。", 12, UiKit.TextDim);
             controls.AddChild(_hint);
             AddChild(controls);
             var scroll = new ScrollContainer { SizeFlagsVertical = SizeFlags.ExpandFill, HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled };
@@ -122,7 +122,7 @@ namespace PixelCreatures.Workshop
                         foreach (var s in SampleLibrary.UncuratedSeeds)
                         {
                             var g = GenomeFactory.Sample(f, s);
-                            entries.Add((g, $"{g.Name} · Seed {s}"));
+                            entries.Add((g, $"{g.Name} · 种子 {s}"));
                         }
                     }
                     break;
@@ -135,14 +135,14 @@ namespace PixelCreatures.Workshop
                         if (famFilter == null || e.Genome.FamilyId == famFilter) entries.Add((e.Genome, e.Genome.Name));
                     break;
             }
-            _hint.Text = $"{entries.Count} {(entries.Count == 1 ? "creature" : "creatures")}. Click a creature to load it into the editor.";
+            _hint.Text = $"共 {entries.Count} 个生物。单击一个生物即可载入编辑器。";
             foreach (var (g, label) in entries)
             {
                 var box = new VBoxContainer { CustomMinimumSize = new Vector2(128, 0) };
                 box.AddThemeConstantOverride("separation", 0);
                 var btn = new TextureButton { CustomMinimumSize = new Vector2(128, 96), IgnoreTextureSize = true, StretchMode = TextureButton.StretchModeEnum.KeepAspectCentered, TextureFilter = TextureFilterEnum.Nearest, TooltipText = $"{label}\n{CreatureRuntime.Registry.GetFamily(g.FamilyId).DisplayName}" };
                 var genome = g;
-                btn.Pressed += () => _main.LoadGenome(genome, $"Loaded from gallery: {genome.Name}");
+                btn.Pressed += () => _main.LoadGenome(genome, $"从图库载入：{genome.Name}");
                 var bg = new PanelContainer();
                 bg.AddChild(btn);
                 box.AddChild(bg);

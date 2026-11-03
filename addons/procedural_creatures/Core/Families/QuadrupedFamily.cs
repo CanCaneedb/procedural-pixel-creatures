@@ -11,90 +11,90 @@ namespace PixelCreatures.Core.Families
     public sealed class QuadrupedFamily : CreatureFamilyBase
     {
         public override string Id => "quadruped";
-        public override string DisplayName => "Quadrupeds & Beasts";
-        public override string Description => "Mammalian quadrupeds from rodents to heavy beasts: chest, belly and hips, a neck, expressive head, four legs with plantigrade, digitigrade or hoofed feet, and a tail.";
+        public override string DisplayName => "四足兽类";
+        public override string Description => "从啮齿类到重型巨兽的哺乳四足动物：胸腔、腹部与臀部，颈部，富有表现力的头部，四条具跖行、趾行或蹄行足型的腿，以及一条尾巴。";
         public override int Order => 10;
 
         private static readonly ArchetypeInfo[] ArchetypeList =
         {
-            new ArchetypeInfo("canine", "Canine", 1.2),
-            new ArchetypeInfo("feline", "Feline", 1.1),
-            new ArchetypeInfo("bovine", "Heavy grazer", 0.9),
-            new ArchetypeInfo("cervine", "Cervine", 0.9),
-            new ArchetypeInfo("ursine", "Ursine", 0.9),
-            new ArchetypeInfo("rodent", "Rodent", 0.8),
-            new ArchetypeInfo("boar", "Boar", 0.8),
-            new ArchetypeInfo("beast", "Fantasy beast", 1.2),
-            new ArchetypeInfo("equine", "Equine", 0.9),
+            new ArchetypeInfo("canine", "犬类", 1.2),
+            new ArchetypeInfo("feline", "猫类", 1.1),
+            new ArchetypeInfo("bovine", "重型食草兽", 0.9),
+            new ArchetypeInfo("cervine", "鹿类", 0.9),
+            new ArchetypeInfo("ursine", "熊类", 0.9),
+            new ArchetypeInfo("rodent", "啮齿类", 0.8),
+            new ArchetypeInfo("boar", "野猪", 0.8),
+            new ArchetypeInfo("beast", "奇幻巨兽", 1.2),
+            new ArchetypeInfo("equine", "马类", 0.9),
         };
 
         public override IReadOnlyList<ArchetypeInfo> Archetypes => ArchetypeList;
 
         public static readonly (string, string)[] Forms =
         {
-            ("canine", "Canine"), ("feline", "Feline"), ("bovine", "Heavy grazer"), ("cervine", "Cervine"),
-            ("ursine", "Ursine"), ("rodent", "Rodent"), ("boar", "Boar"), ("beast", "Fantasy beast"),
-            ("equine", "Equine"),
+            ("canine", "犬类"), ("feline", "猫类"), ("bovine", "重型食草兽"), ("cervine", "鹿类"),
+            ("ursine", "熊类"), ("rodent", "啮齿类"), ("boar", "野猪"), ("beast", "奇幻巨兽"),
+            ("equine", "马类"),
         };
 
-        public static readonly (string, string)[] EarKinds = { ("none", "None"), ("pointed", "Pointed"), ("round", "Round"), ("floppy", "Floppy"), ("long", "Long"), ("tufted", "Tufted"), ("fin", "Fin") };
-        public static readonly (string, string)[] HornKinds = { ("none", "None"), ("short", "Short"), ("curved", "Curved"), ("ram", "Ram"), ("antlers", "Antlers"), ("unicorn", "Unicorn"), ("backswept", "Swept back"), ("nasal", "Nasal") };
-        public static readonly (string, string)[] TeethKinds = { ("none", "None"), ("small", "Small"), ("fangs", "Fangs"), ("sabre", "Sabre"), ("tusks", "Tusks") };
-        public static readonly (string, string)[] EyeStyles = { ("bead", "Beady"), ("round", "Round"), ("slit", "Slit pupils"), ("glow", "Glowing"), ("button", "Large & cute") };
-        public static readonly (string, string)[] Stances = { ("plantigrade", "Flat-footed"), ("digitigrade", "Toe walking"), ("unguligrade", "Hoofed") };
-        public static readonly (string, string)[] TailTips = { ("plain", "Plain"), ("tuft", "Tuft"), ("fluffy", "Fluffy"), ("club", "Club"), ("spade", "Spade") };
-        public static readonly (string, string)[] BackKinds = { ("none", "None"), ("mane", "Mane"), ("spikes", "Spikes"), ("ridge", "Ridge"), ("plates", "Plates"), ("quills", "Quills") };
+        public static readonly (string, string)[] EarKinds = { ("none", "无"), ("pointed", "尖耳"), ("round", "圆"), ("floppy", "垂耳"), ("long", "长"), ("tufted", "簇毛"), ("fin", "鳍状") };
+        public static readonly (string, string)[] HornKinds = { ("none", "无"), ("short", "短"), ("curved", "弯角"), ("ram", "盘角"), ("antlers", "鹿角"), ("unicorn", "独角"), ("backswept", "后掠"), ("nasal", "鼻角") };
+        public static readonly (string, string)[] TeethKinds = { ("none", "无"), ("small", "小"), ("fangs", "獠牙"), ("sabre", "剑齿"), ("tusks", "獠牙") };
+        public static readonly (string, string)[] EyeStyles = { ("bead", "珠状"), ("round", "圆"), ("slit", "竖瞳"), ("glow", "发光"), ("button", "大而可爱") };
+        public static readonly (string, string)[] Stances = { ("plantigrade", "跖行"), ("digitigrade", "趾行"), ("unguligrade", "蹄行") };
+        public static readonly (string, string)[] TailTips = { ("plain", "素色"), ("tuft", "毛簇"), ("fluffy", "蓬松"), ("club", "棒状"), ("spade", "铲形") };
+        public static readonly (string, string)[] BackKinds = { ("none", "无"), ("mane", "鬃毛"), ("spikes", "尖刺"), ("ridge", "背脊"), ("plates", "甲板"), ("quills", "棘刺") };
 
         protected override GeneSchema CreateSchema()
         {
             var b = new GeneSchemaBuilder(Id);
-            b.Group("body", "Body", GeneStream.Anatomy)
-             .Choice("form", "Body type", Forms, "canine", "Archetype used as a template for proportions and features when rerolling.", 0.05)
-             .Float("size", "Size", 0, 1, 0.5, "Overall size in logical pixels.", 0.08)
-             .Float("mass", "Mass", 0, 1, 0.5, "Slender to heavy.", 0.1)
-             .Float("torso.length", "Torso length", 0, 1, 0.5, "Compact to elongated.", 0.1)
-             .Float("torso.chest", "Torso chest", 0, 1, 0.5, "Distribution of mass between hips and chest.", 0.1)
-             .Float("torso.belly", "Torso belly", 0, 1, 0.35, "Round, hanging belly.", 0.1)
-             .Float("torso.hump", "Torso hump", 0, 1, 0.1, "Hump above the shoulders.", 0.1)
-             .Float("torso.width", "Torso width", 0, 1, 0.5, "Width of the torso.", 0.1);
-            b.Group("neck", "Neck", GeneStream.Anatomy)
-             .Float("neck.length", "Neck length", 0, 1, 0.4, "", 0.1)
-             .Float("neck.thickness", "Neck thickness", 0, 1, 0.6, "", 0.1)
-             .Float("neck.carriage", "Neck carriage", 0, 1, 0.45, "Horizontal to upright carriage.", 0.1);
-            b.Group("head", "Head", GeneStream.Anatomy)
-             .Float("head.size", "Head size", 0, 1, 0.5, "", 0.1)
-             .Float("head.round", "Head round", 0, 1, 0.5, "Flat, elongated skull to round head.", 0.1)
-             .Float("head.pitch", "Head pitch", 0, 1, 0.35, "Horizontal to downward tilted, as in grazers.", 0.1)
-             .Float("head.snout", "Head snout", 0, 1, 0.5, "", 0.1)
-             .Float("head.snoutWidth", "Head snout width", 0, 1, 0.5, "", 0.1)
-             .Float("head.jaw", "Head jaw", 0, 1, 0.5, "", 0.1)
-             .Float("head.brow", "Head brow", 0, 1, 0.3, "Heavy brow ridge for a fierce expression.", 0.1)
-             .Float("head.cheeks", "Head cheeks", 0, 1, 0.2, "Cheeks and cheek fur.", 0.1)
-             .Choice("head.teeth", "Head teeth", TeethKinds, "small", "", 0.1)
-             .Float("head.eyeSize", "Head eye size", 0, 1, 0.5, "", 0.1)
-             .Choice("head.eyeStyle", "Head eye style", EyeStyles, "bead", "", 0.08)
-             .Float("head.eyeForward", "Head eye forward", 0, 1, 0.45, "Side-facing prey eyes to forward-facing predator eyes.", 0.1);
-            b.Group("ears", "Ears & horns", GeneStream.Anatomy)
-             .Choice("head.ears", "Head ears", EarKinds, "pointed", "", 0.1)
-             .Float("head.earSize", "Head ear size", 0, 1, 0.5, "", 0.1)
-             .Choice("head.horns", "Head horns", HornKinds, "none", "", 0.1)
-             .Float("head.hornSize", "Head horn size", 0, 1, 0.5, "", 0.1);
-            b.Group("legs", "Legs", GeneStream.Anatomy)
-             .Float("legs.length", "Legs length", 0, 1, 0.5, "", 0.1)
-             .Float("legs.thickness", "Legs thickness", 0, 1, 0.5, "", 0.1)
-             .Choice("legs.stance", "Legs stance", Stances, "digitigrade", "", 0.08)
-             .Float("legs.front", "Legs front", 0, 1, 0.5, "Shorter or longer front legs, changing the slope of the back.", 0.1)
-             .Float("legs.paws", "Legs paws", 0, 1, 0.5, "", 0.1)
-             .Float("legs.claws", "Legs claws", 0, 1, 0.4, "", 0.1);
-            b.Group("tail", "Tail", GeneStream.Anatomy)
-             .Float("tail.length", "Tail length", 0, 1, 0.5, "", 0.1)
-             .Float("tail.thickness", "Tail thickness", 0, 1, 0.4, "", 0.1)
-             .Float("tail.carriage", "Tail carriage", 0, 1, 0.45, "Hanging to raised.", 0.1)
-             .Float("tail.curl", "Tail curl", 0, 1, 0.3, "", 0.1)
-             .Choice("tail.tip", "Tail tip", TailTips, "plain", "", 0.1);
-            b.Group("back", "Back", GeneStream.Anatomy)
-             .Choice("back.feature", "Back feature", BackKinds, "none", "", 0.1)
-             .Float("back.size", "Back size", 0, 1, 0.5, "", 0.1);
+            b.Group("body", "身体", GeneStream.Anatomy)
+             .Choice("form", "体型", Forms, "canine", "重掷时用作比例与特征模板的原型。", 0.05)
+             .Float("size", "体型", 0, 1, 0.5, "以逻辑像素表示的整体大小。", 0.08)
+             .Float("mass", "体重", 0, 1, 0.5, "从纤细到笨重。", 0.1)
+             .Float("torso.length", "躯干长度", 0, 1, 0.5, "从紧凑到修长。", 0.1)
+             .Float("torso.chest", "躯干胸腔", 0, 1, 0.5, "体重在臀部与胸部之间的分布。", 0.1)
+             .Float("torso.belly", "躯干腹部", 0, 1, 0.35, "圆润下垂的腹部。", 0.1)
+             .Float("torso.hump", "躯干驼峰", 0, 1, 0.1, "肩部上方的驼峰。", 0.1)
+             .Float("torso.width", "躯干宽度", 0, 1, 0.5, "躯干的宽度。", 0.1);
+            b.Group("neck", "颈部", GeneStream.Anatomy)
+             .Float("neck.length", "颈长", 0, 1, 0.4, "", 0.1)
+             .Float("neck.thickness", "颈部粗细", 0, 1, 0.6, "", 0.1)
+             .Float("neck.carriage", "颈部姿态", 0, 1, 0.45, "从水平到竖直的颈部姿态。", 0.1);
+            b.Group("head", "头部", GeneStream.Anatomy)
+             .Float("head.size", "头部大小", 0, 1, 0.5, "", 0.1)
+             .Float("head.round", "头部圆度", 0, 1, 0.5, "从扁平狭长的头骨到圆润的头部。", 0.1)
+             .Float("head.pitch", "头部俯角", 0, 1, 0.35, "从水平到向下倾斜，如食草动物。", 0.1)
+             .Float("head.snout", "口鼻长度", 0, 1, 0.5, "", 0.1)
+             .Float("head.snoutWidth", "口鼻宽度", 0, 1, 0.5, "", 0.1)
+             .Float("head.jaw", "下颌", 0, 1, 0.5, "", 0.1)
+             .Float("head.brow", "眉骨", 0, 1, 0.3, "厚重的眉骨，显得凶悍。", 0.1)
+             .Float("head.cheeks", "面颊", 0, 1, 0.2, "面颊及颊部毛发。", 0.1)
+             .Choice("head.teeth", "牙齿", TeethKinds, "small", "", 0.1)
+             .Float("head.eyeSize", "眼睛大小", 0, 1, 0.5, "", 0.1)
+             .Choice("head.eyeStyle", "眼睛样式", EyeStyles, "bead", "", 0.08)
+             .Float("head.eyeForward", "眼睛前视", 0, 1, 0.45, "由侧向的猎物眼睛到前视的掠食者眼睛。", 0.1);
+            b.Group("ears", "耳与角", GeneStream.Anatomy)
+             .Choice("head.ears", "耳朵", EarKinds, "pointed", "", 0.1)
+             .Float("head.earSize", "耳朵大小", 0, 1, 0.5, "", 0.1)
+             .Choice("head.horns", "角", HornKinds, "none", "", 0.1)
+             .Float("head.hornSize", "角大小", 0, 1, 0.5, "", 0.1);
+            b.Group("legs", "腿", GeneStream.Anatomy)
+             .Float("legs.length", "腿长", 0, 1, 0.5, "", 0.1)
+             .Float("legs.thickness", "腿粗", 0, 1, 0.5, "", 0.1)
+             .Choice("legs.stance", "站姿", Stances, "digitigrade", "", 0.08)
+             .Float("legs.front", "前腿长度", 0, 1, 0.5, "前腿变短或变长，改变背部的倾斜。", 0.1)
+             .Float("legs.paws", "脚掌", 0, 1, 0.5, "", 0.1)
+             .Float("legs.claws", "爪子", 0, 1, 0.4, "", 0.1);
+            b.Group("tail", "尾巴", GeneStream.Anatomy)
+             .Float("tail.length", "尾长", 0, 1, 0.5, "", 0.1)
+             .Float("tail.thickness", "尾粗", 0, 1, 0.4, "", 0.1)
+             .Float("tail.carriage", "尾巴姿态", 0, 1, 0.45, "从下垂到上翘。", 0.1)
+             .Float("tail.curl", "尾巴卷曲", 0, 1, 0.3, "", 0.1)
+             .Choice("tail.tip", "尾尖", TailTips, "plain", "", 0.1);
+            b.Group("back", "背部", GeneStream.Anatomy)
+             .Choice("back.feature", "背部特征", BackKinds, "none", "", 0.1)
+             .Float("back.size", "背部大小", 0, 1, 0.5, "", 0.1);
             SharedGenes.AddColorGenes(b);
             SharedGenes.AddPatternGenes(b, "fur");
             SharedGenes.AddMotionGenes(b);
@@ -412,7 +412,7 @@ namespace PixelCreatures.Core.Families
             double minHip = hipR * 0.92 + 1.5;
             if (hipH < minHip)
             {
-                b.Repair($"Leg length increased: hip height {hipH:0.0} px -> {minHip:0.0} px to keep the belly off the ground.");
+                b.Repair($"已加长腿部：髋部高度由 {hipH:0.0} px 提升到 {minHip:0.0} px，使腹部不贴地。");
                 hipH = minHip;
             }
             double shoulderH = hipH * DMath.Lerp(0.88, 1.14, g.Get("legs.front"));

@@ -27,8 +27,8 @@ namespace PixelCreatures.Plantfolk
         public void Register(CreatureRegistry registry)
         {
             registry.RegisterPaletteRule(new PlantPaletteRule());
-            registry.RegisterShapeBlock(new DelegateShapeBlock(LeafBlock.Id, "Plants",
-                "Leaf or petal on a bone: two triangles around a midrib, optionally a spring chain that flutters in the wind. Parameters: length, width, spring (0/1), curl.",
+            registry.RegisterShapeBlock(new DelegateShapeBlock(LeafBlock.Id, "植物",
+                "骨骼上的叶片或花瓣：围绕中脉的两个三角形，可选随风飘动的弹簧链。参数：length、width、spring（0/1）、curl。",
                 LeafBlock.Build));
             registry.RegisterLocomotion(RootWalkLocomotion.ModuleId, () => new RootWalkLocomotion());
             registry.RegisterFamily(new PlantfolkFamily());

@@ -14,67 +14,67 @@ namespace PixelCreatures.Plantfolk
     public sealed class PlantfolkFamily : CreatureFamilyBase
     {
         public override string Id => "plantfolk";
-        public override string DisplayName => "Plantfolk (Extension)";
-        public override string Description => "Example extension: mandrakes, saplings, mushroom folk, flytraps, cacti and blossoms walking on roots, with a dedicated palette rule, leaf shape block and motion module.";
+        public override string DisplayName => "植物族（扩展）";
+        public override string Description => "扩展示例：曼德拉草、树苗、蘑菇人、捕蝇草、仙人掌与花精，以根行走，并拥有专用配色规则、叶片形状块与运动模块。";
         public override int Order => 200;
         public override string PaletteRuleId => "plantfolk";
 
         private static readonly ArchetypeInfo[] ArchetypeList =
         {
-            new ArchetypeInfo("mandrake", "Mandrake", 1.1),
-            new ArchetypeInfo("sapling", "Sapling", 1.0),
-            new ArchetypeInfo("mushroom", "Mushroom folk", 1.1),
-            new ArchetypeInfo("flytrap", "Flytrap", 0.9),
-            new ArchetypeInfo("cactus", "Cactus", 0.8),
-            new ArchetypeInfo("bloom", "Blossom", 0.9),
+            new ArchetypeInfo("mandrake", "曼德拉草", 1.1),
+            new ArchetypeInfo("sapling", "树苗", 1.0),
+            new ArchetypeInfo("mushroom", "蘑菇人", 1.1),
+            new ArchetypeInfo("flytrap", "捕蝇草", 0.9),
+            new ArchetypeInfo("cactus", "仙人掌", 0.8),
+            new ArchetypeInfo("bloom", "花精", 0.9),
         };
 
         public override IReadOnlyList<ArchetypeInfo> Archetypes => ArchetypeList;
 
         public static readonly (string, string)[] Forms =
         {
-            ("mandrake", "Mandrake"), ("sapling", "Sapling"), ("mushroom", "Mushroom folk"), ("flytrap", "Flytrap"), ("cactus", "Cactus"), ("bloom", "Blossom"),
+            ("mandrake", "曼德拉草"), ("sapling", "树苗"), ("mushroom", "蘑菇人"), ("flytrap", "捕蝇草"), ("cactus", "仙人掌"), ("bloom", "花精"),
         };
-        public static readonly (string, string)[] Crowns = { ("none", "None"), ("tuft", "Tuft"), ("foliage", "Foliage"), ("cap", "Cap"), ("flower", "Flower"), ("trap", "Trap") };
-        public static readonly (string, string)[] ArmKinds = { ("none", "None"), ("twigs", "Twigs"), ("vines", "Vines"), ("leaves", "Leaves") };
-        public static readonly (string, string)[] EyeStyles = { ("bead", "Beady"), ("button", "Large & cute"), ("glow", "Glowing"), ("round", "Round") };
-        public static readonly (string, string)[] MouthKinds = { ("none", "None"), ("small", "Small"), ("wide", "Wide") };
-        public static readonly (string, string)[] CrownShapes = { ("round", "Round"), ("conical", "Conical"), ("drooping", "Drooping") };
+        public static readonly (string, string)[] Crowns = { ("none", "无"), ("tuft", "毛簇"), ("foliage", "枝叶"), ("cap", "菌盖"), ("flower", "花"), ("trap", "捕虫夹") };
+        public static readonly (string, string)[] ArmKinds = { ("none", "无"), ("twigs", "细枝"), ("vines", "藤蔓"), ("leaves", "叶片") };
+        public static readonly (string, string)[] EyeStyles = { ("bead", "珠状"), ("button", "大而可爱"), ("glow", "发光"), ("round", "圆") };
+        public static readonly (string, string)[] MouthKinds = { ("none", "无"), ("small", "小"), ("wide", "宽") };
+        public static readonly (string, string)[] CrownShapes = { ("round", "圆"), ("conical", "锥形"), ("drooping", "下垂") };
         public static readonly (string, string)[] CapStyles =
         {
-            ("amanita", "Amanita"), ("bolete", "Bolete"), ("chanterelle", "Chanterelle"), ("liberty", "Pointed cap"), ("inkcap", "Inkcap"), ("glowcap", "Glowing mushroom"),
+            ("amanita", "鹅膏菌"), ("bolete", "牛肝菌"), ("chanterelle", "鸡油菌"), ("liberty", "尖顶菌盖"), ("inkcap", "鬼伞"), ("glowcap", "发光菇"),
         };
 
         protected override GeneSchema CreateSchema()
         {
             var b = new GeneSchemaBuilder(Id);
-            b.Group("body", "Body", GeneStream.Anatomy)
-             .Choice("form", "Body type", Forms, "mandrake", "Archetype used as a template for proportions and features when rerolling.", 0.05)
-             .Float("size", "Size", 0, 1, 0.45, "", 0.08)
-             .Float("body.height", "Trunk height", 0, 1, 0.5, "", 0.1)
-             .Float("body.width", "Trunk thickness", 0, 1, 0.5, "", 0.1)
-             .Float("body.gnarl", "Body gnarl", 0, 1, 0.3, "Knots, bulbs and outgrowths.", 0.1)
-             .Float("spines", "Spines", 0, 1, 0.0, "", 0.1);
-            b.Group("crown", "Crown", GeneStream.Anatomy)
-             .Choice("crown.kind", "Crown kind", Crowns, "tuft", "Growth at the top of the body.", 0.08)
-             .Float("crown.size", "Crown size", 0, 1, 0.5, "", 0.1)
-             .Float("crown.count", "Crown count", 0, 1, 0.5, "", 0.1)
-             .Choice("crown.shape", "Crown shape", CrownShapes, "round", "Rounded canopy, conical conifer or drooping willow.", 0.08)
-             .Choice("cap.style", "Cap style", CapStyles, "amanita", "Mushroom cap: fly agaric, bolete, chanterelle, pointed, inkcap or glowing.", 0.08);
-            b.Group("face", "Face", GeneStream.Anatomy)
-             .Float("face.eyeSize", "Face eye size", 0, 1, 0.5, "", 0.1)
-             .Choice("face.eyeStyle", "Face eye style", EyeStyles, "bead", "", 0.08)
-             .Choice("face.mouth", "Face mouth", MouthKinds, "small", "", 0.1);
-            b.Group("limbs", "Limbs", GeneStream.Anatomy)
-             .Choice("arms.kind", "Arms kind", ArmKinds, "twigs", "", 0.1)
-             .Float("arms.length", "Arms length", 0, 1, 0.5, "", 0.1)
-             .Float("legs.length", "Root length", 0, 1, 0.4, "", 0.1)
-             .Float("legs.thickness", "Root thickness", 0, 1, 0.5, "", 0.1);
-            b.Group("plantcolor", "Foliage & cap colors", GeneStream.Color)
-             .Hue("color.leafHue", "Color leaf hue", 132, "Spring green, evergreen, autumn gold, autumn red or blossom pink.")
-             .Hue("color.clothHue", "Cap hue", 27, "Mushroom cap hue.")
-             .Float("color.clothSaturation", "Cap saturation", 0, 1, 0.85, "", 0.12)
-             .Float("color.clothValue", "Cap brightness", 0, 1, 0.5, "", 0.12);
+            b.Group("body", "身体", GeneStream.Anatomy)
+             .Choice("form", "体型", Forms, "mandrake", "重新生成时作为比例与特征模板的形态。", 0.05)
+             .Float("size", "体型", 0, 1, 0.45, "", 0.08)
+             .Float("body.height", "树干高度", 0, 1, 0.5, "", 0.1)
+             .Float("body.width", "树干粗细", 0, 1, 0.5, "", 0.1)
+             .Float("body.gnarl", "身体扭曲", 0, 1, 0.3, "树瘤、球状凸起与赘生物。", 0.1)
+             .Float("spines", "棘刺", 0, 1, 0.0, "", 0.1);
+            b.Group("crown", "头冠", GeneStream.Anatomy)
+             .Choice("crown.kind", "冠饰类型", Crowns, "tuft", "生长在身体顶部的结构。", 0.08)
+             .Float("crown.size", "冠饰大小", 0, 1, 0.5, "", 0.1)
+             .Float("crown.count", "冠饰数量", 0, 1, 0.5, "", 0.1)
+             .Choice("crown.shape", "冠饰形状", CrownShapes, "round", "圆润的树冠、锥形的针叶树或下垂的柳树。", 0.08)
+             .Choice("cap.style", "菌盖样式", CapStyles, "amanita", "菌盖：毒蝇伞、牛肝菌、鸡油菌、尖顶、鬼伞或发光。", 0.08);
+            b.Group("face", "面部", GeneStream.Anatomy)
+             .Float("face.eyeSize", "眼睛大小", 0, 1, 0.5, "", 0.1)
+             .Choice("face.eyeStyle", "眼睛样式", EyeStyles, "bead", "", 0.08)
+             .Choice("face.mouth", "嘴型", MouthKinds, "small", "", 0.1);
+            b.Group("limbs", "四肢", GeneStream.Anatomy)
+             .Choice("arms.kind", "手臂类型", ArmKinds, "twigs", "", 0.1)
+             .Float("arms.length", "手臂长度", 0, 1, 0.5, "", 0.1)
+             .Float("legs.length", "根长", 0, 1, 0.4, "", 0.1)
+             .Float("legs.thickness", "根粗细", 0, 1, 0.5, "", 0.1);
+            b.Group("plantcolor", "枝叶与菌盖配色", GeneStream.Color)
+             .Hue("color.leafHue", "叶片色相", 132, "春绿、常绿、秋金、秋红或花色粉。")
+             .Hue("color.clothHue", "菌盖色相", 27, "菌盖的色相。")
+             .Float("color.clothSaturation", "菌盖饱和度", 0, 1, 0.85, "", 0.12)
+             .Float("color.clothValue", "菌盖明度", 0, 1, 0.5, "", 0.12);
             SharedGenes.AddColorGenes(b);
             SharedGenes.AddPatternGenes(b, "bark");
             SharedGenes.AddMotionGenes(b);

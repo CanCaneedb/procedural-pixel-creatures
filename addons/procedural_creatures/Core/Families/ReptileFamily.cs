@@ -13,78 +13,78 @@ namespace PixelCreatures.Core.Families
     public sealed class ReptileFamily : CreatureFamilyBase
     {
         public override string Id => "reptile";
-        public override string DisplayName => "Reptiles & Dragons";
-        public override string Description => "Lizards, crocodiles, turtles, salamanders, wyrms and winged dragons: low bodies on splayed or partly upright legs, long tails and scales. Membrane-winged dragons can fly.";
+        public override string DisplayName => "爬行动物与龙";
+        public override string Description => "蜥蜴、鳄鱼、乌龟、蝾螈、巨蛇与有翼龙：低矮的身体配以匍匐或半直立的腿、长尾巴和鳞片。膜翼的龙可以飞行。";
         public override int Order => 30;
 
         private static readonly ArchetypeInfo[] ArchetypeList =
         {
-            new ArchetypeInfo("lizard", "Lizard", 1.2),
-            new ArchetypeInfo("crocodile", "Crocodile", 0.9),
-            new ArchetypeInfo("tortoise", "Tortoise", 0.8),
-            new ArchetypeInfo("salamander", "Salamander", 0.8),
-            new ArchetypeInfo("drake", "Drake", 1.0),
-            new ArchetypeInfo("dragon", "Dragon", 1.1),
+            new ArchetypeInfo("lizard", "蜥蜴", 1.2),
+            new ArchetypeInfo("crocodile", "鳄鱼", 0.9),
+            new ArchetypeInfo("tortoise", "乌龟", 0.8),
+            new ArchetypeInfo("salamander", "蝾螈", 0.8),
+            new ArchetypeInfo("drake", "龙兽", 1.0),
+            new ArchetypeInfo("dragon", "龙", 1.1),
         };
 
         public override IReadOnlyList<ArchetypeInfo> Archetypes => ArchetypeList;
 
         public static readonly (string, string)[] Forms =
         {
-            ("lizard", "Lizard"), ("crocodile", "Crocodile"), ("tortoise", "Tortoise"), ("salamander", "Salamander"), ("drake", "Drake"), ("dragon", "Dragon"),
+            ("lizard", "蜥蜴"), ("crocodile", "鳄鱼"), ("tortoise", "乌龟"), ("salamander", "蝾螈"), ("drake", "龙兽"), ("dragon", "龙"),
         };
-        public static readonly (string, string)[] Stances = { ("sprawling", "Sprawling"), ("erect", "Erect") };
-        public static readonly (string, string)[] Crests = { ("none", "None"), ("frill", "Frill"), ("crest", "Crest"), ("spines", "Spines") };
-        public static readonly (string, string)[] HornKinds = { ("none", "None"), ("short", "Short"), ("curved", "Curved"), ("backswept", "Swept back"), ("ram", "Ram"), ("nasal", "Nasal") };
-        public static readonly (string, string)[] TeethKinds = { ("none", "None"), ("small", "Small"), ("fangs", "Fangs"), ("sabre", "Sabre") };
-        public static readonly (string, string)[] EyeStyles = { ("slit", "Slit pupils"), ("bead", "Beady"), ("round", "Round"), ("glow", "Glowing") };
-        public static readonly (string, string)[] TailTips = { ("plain", "Plain"), ("club", "Club"), ("spade", "Spade"), ("fin", "Fin"), ("rattle", "Rattle") };
-        public static readonly (string, string)[] BackKinds = { ("none", "None"), ("spikes", "Spikes"), ("plates", "Plates"), ("ridge", "Ridge"), ("sail", "Sail"), ("shell", "Shell") };
-        public static readonly (string, string)[] WingKinds = { ("none", "None"), ("wings", "Wings") };
-        public static readonly (string, string)[] ShellShapes = { ("dome", "Dome"), ("flat", "Flat"), ("high", "High"), ("spiked", "Spiked") };
+        public static readonly (string, string)[] Stances = { ("sprawling", "匍匐"), ("erect", "直立") };
+        public static readonly (string, string)[] Crests = { ("none", "无"), ("frill", "颈盾"), ("crest", "头冠"), ("spines", "棘刺") };
+        public static readonly (string, string)[] HornKinds = { ("none", "无"), ("short", "短"), ("curved", "弯角"), ("backswept", "后掠"), ("ram", "盘角"), ("nasal", "鼻角") };
+        public static readonly (string, string)[] TeethKinds = { ("none", "无"), ("small", "小"), ("fangs", "獠牙"), ("sabre", "剑齿") };
+        public static readonly (string, string)[] EyeStyles = { ("slit", "竖瞳"), ("bead", "珠状"), ("round", "圆"), ("glow", "发光") };
+        public static readonly (string, string)[] TailTips = { ("plain", "普通"), ("club", "棒状"), ("spade", "铲形"), ("fin", "鳍状"), ("rattle", "响尾") };
+        public static readonly (string, string)[] BackKinds = { ("none", "无"), ("spikes", "尖刺"), ("plates", "甲板"), ("ridge", "背脊"), ("sail", "背帆"), ("shell", "甲壳") };
+        public static readonly (string, string)[] WingKinds = { ("none", "无"), ("wings", "翅膀") };
+        public static readonly (string, string)[] ShellShapes = { ("dome", "圆顶"), ("flat", "扁平"), ("high", "高耸"), ("spiked", "多刺") };
 
         protected override GeneSchema CreateSchema()
         {
             var b = new GeneSchemaBuilder(Id);
-            b.Group("body", "Body", GeneStream.Anatomy)
-             .Choice("form", "Body type", Forms, "lizard", "Archetype used as a template for proportions and features when rerolling.", 0.05)
-             .Float("size", "Size", 0, 1, 0.5, "", 0.08)
-             .Float("mass", "Mass", 0, 1, 0.5, "Slender to heavy.", 0.1)
-             .Float("torso.length", "Torso length", 0, 1, 0.55, "", 0.1)
-             .Float("torso.width", "Torso width", 0, 1, 0.55, "", 0.1)
-             .Float("torso.chest", "Torso chest", 0, 1, 0.5, "", 0.1);
-            b.Group("neck", "Neck", GeneStream.Anatomy)
-             .Float("neck.length", "Neck length", 0, 1, 0.3, "", 0.1)
-             .Float("neck.thickness", "Neck thickness", 0, 1, 0.6, "", 0.1)
-             .Float("neck.carriage", "Neck carriage", 0, 1, 0.35, "", 0.1);
-            b.Group("head", "Head", GeneStream.Anatomy)
-             .Float("head.size", "Head size", 0, 1, 0.5, "", 0.1)
-             .Float("head.snout", "Head snout", 0, 1, 0.5, "", 0.1)
-             .Float("head.snoutWidth", "Head snout width", 0, 1, 0.45, "", 0.1)
-             .Float("head.jaw", "Head jaw", 0, 1, 0.5, "", 0.1)
-             .Float("head.brow", "Head brow", 0, 1, 0.45, "", 0.1)
-             .Choice("head.teeth", "Head teeth", TeethKinds, "small", "", 0.1)
-             .Float("head.eyeSize", "Head eye size", 0, 1, 0.45, "", 0.1)
-             .Choice("head.eyeStyle", "Head eye style", EyeStyles, "slit", "", 0.08)
-             .Choice("head.crest", "Head crest", Crests, "none", "", 0.1)
-             .Choice("head.horns", "Head horns", HornKinds, "none", "", 0.1)
-             .Float("head.hornSize", "Head horn size", 0, 1, 0.5, "", 0.1);
-            b.Group("legs", "Legs", GeneStream.Anatomy)
-             .Float("legs.length", "Legs length", 0, 1, 0.35, "", 0.1)
-             .Float("legs.thickness", "Legs thickness", 0, 1, 0.5, "", 0.1)
-             .Choice("legs.stance", "Legs stance", Stances, "sprawling", "", 0.08)
-             .Float("legs.claws", "Legs claws", 0, 1, 0.5, "", 0.1);
-            b.Group("tail", "Tail", GeneStream.Anatomy)
-             .Float("tail.length", "Tail length", 0, 1, 0.65, "", 0.1)
-             .Float("tail.thickness", "Tail thickness", 0, 1, 0.55, "", 0.1)
-             .Float("tail.curl", "Tail curl", 0, 1, 0.2, "", 0.1)
-             .Choice("tail.tip", "Tail tip", TailTips, "plain", "", 0.1);
-            b.Group("back", "Back", GeneStream.Anatomy)
-             .Choice("back.feature", "Back feature", BackKinds, "none", "", 0.1)
-             .Float("back.size", "Back size", 0, 1, 0.5, "", 0.1)
-             .Choice("shell.shape", "Shell shape", ShellShapes, "dome", "Only applies to creatures with a shell.", 0.08)
-             .Choice("wings.kind", "Wings kind", WingKinds, "none", "Winged dragons can fly.", 0.08)
-             .Float("wings.span", "Wings span", 0, 1, 0.55, "", 0.1);
+            b.Group("body", "身体", GeneStream.Anatomy)
+             .Choice("form", "体型", Forms, "lizard", "重掷时用作比例与特征模板的原型。", 0.05)
+             .Float("size", "体型", 0, 1, 0.5, "", 0.08)
+             .Float("mass", "体重", 0, 1, 0.5, "从纤细到粗壮。", 0.1)
+             .Float("torso.length", "躯干长度", 0, 1, 0.55, "", 0.1)
+             .Float("torso.width", "躯干宽度", 0, 1, 0.55, "", 0.1)
+             .Float("torso.chest", "躯干胸腔", 0, 1, 0.5, "", 0.1);
+            b.Group("neck", "颈部", GeneStream.Anatomy)
+             .Float("neck.length", "颈长", 0, 1, 0.3, "", 0.1)
+             .Float("neck.thickness", "颈部粗细", 0, 1, 0.6, "", 0.1)
+             .Float("neck.carriage", "颈部姿态", 0, 1, 0.35, "", 0.1);
+            b.Group("head", "头部", GeneStream.Anatomy)
+             .Float("head.size", "头部大小", 0, 1, 0.5, "", 0.1)
+             .Float("head.snout", "口鼻长度", 0, 1, 0.5, "", 0.1)
+             .Float("head.snoutWidth", "口鼻宽度", 0, 1, 0.45, "", 0.1)
+             .Float("head.jaw", "下颌", 0, 1, 0.5, "", 0.1)
+             .Float("head.brow", "眉骨", 0, 1, 0.45, "", 0.1)
+             .Choice("head.teeth", "牙齿", TeethKinds, "small", "", 0.1)
+             .Float("head.eyeSize", "眼睛大小", 0, 1, 0.45, "", 0.1)
+             .Choice("head.eyeStyle", "眼睛样式", EyeStyles, "slit", "", 0.08)
+             .Choice("head.crest", "头冠", Crests, "none", "", 0.1)
+             .Choice("head.horns", "角", HornKinds, "none", "", 0.1)
+             .Float("head.hornSize", "角大小", 0, 1, 0.5, "", 0.1);
+            b.Group("legs", "腿", GeneStream.Anatomy)
+             .Float("legs.length", "腿长", 0, 1, 0.35, "", 0.1)
+             .Float("legs.thickness", "腿粗", 0, 1, 0.5, "", 0.1)
+             .Choice("legs.stance", "站姿", Stances, "sprawling", "", 0.08)
+             .Float("legs.claws", "爪子", 0, 1, 0.5, "", 0.1);
+            b.Group("tail", "尾巴", GeneStream.Anatomy)
+             .Float("tail.length", "尾长", 0, 1, 0.65, "", 0.1)
+             .Float("tail.thickness", "尾粗", 0, 1, 0.55, "", 0.1)
+             .Float("tail.curl", "尾巴卷曲", 0, 1, 0.2, "", 0.1)
+             .Choice("tail.tip", "尾尖", TailTips, "plain", "", 0.1);
+            b.Group("back", "背部", GeneStream.Anatomy)
+             .Choice("back.feature", "背部特征", BackKinds, "none", "", 0.1)
+             .Float("back.size", "背部大小", 0, 1, 0.5, "", 0.1)
+             .Choice("shell.shape", "甲壳形状", ShellShapes, "dome", "仅对有甲壳的生物生效。", 0.08)
+             .Choice("wings.kind", "翅膀类型", WingKinds, "none", "有翼的龙可以飞行。", 0.08)
+             .Float("wings.span", "翼展", 0, 1, 0.55, "", 0.1);
             SharedGenes.AddColorGenes(b);
             SharedGenes.AddPatternGenes(b, "scales");
             SharedGenes.AddMotionGenes(b);

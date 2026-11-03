@@ -49,7 +49,7 @@ namespace PixelCreatures.Core
         }
 
         public static readonly string[] DirectionNames = { "E", "NE", "N", "NW", "W", "SW", "S", "SE" };
-        public static readonly string[] DirectionLabels = { "East", "Northeast", "North", "Northwest", "West", "Southwest", "South", "Southeast" };
+        public static readonly string[] DirectionLabels = { "东", "东北", "北", "西北", "西", "西南", "南", "东南" };
 
         /// <summary>Projects a creature-space point to canvas pixels relative to the canvas origin (y down).</summary>
         public static Vec2 CreatureToScreen(Vec3 p, double yaw, double elevation, Vec3 rootOffset)

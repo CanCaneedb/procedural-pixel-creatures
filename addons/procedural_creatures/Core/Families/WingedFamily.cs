@@ -13,71 +13,71 @@ namespace PixelCreatures.Core.Families
     public sealed class WingedFamily : CreatureFamilyBase
     {
         public override string Id => "winged";
-        public override string DisplayName => "Winged Creatures";
-        public override string Description => "Songbirds, raptors, owls, bats, moths and dragonflies with feathered, membrane or insect wings. Birds walk and take off when running; bats and insects hover.";
+        public override string DisplayName => "有翼生物";
+        public override string Description => "鸣禽、猛禽、猫头鹰、蝙蝠、蛾与蜻蜓，拥有羽翼、膜翼或虫翼。鸟类行走，奔跑时起飞；蝙蝠与昆虫悬停。";
         public override int Order => 50;
 
         private static readonly ArchetypeInfo[] ArchetypeList =
         {
-            new ArchetypeInfo("songbird", "Songbird", 1.2),
-            new ArchetypeInfo("raptor", "Raptor", 1.0),
-            new ArchetypeInfo("owl", "Owl", 0.9),
-            new ArchetypeInfo("bat", "Bat", 1.0),
-            new ArchetypeInfo("moth", "Moth", 0.8),
-            new ArchetypeInfo("dragonfly", "Dragonfly", 0.8),
+            new ArchetypeInfo("songbird", "鸣禽", 1.2),
+            new ArchetypeInfo("raptor", "猛禽", 1.0),
+            new ArchetypeInfo("owl", "猫头鹰", 0.9),
+            new ArchetypeInfo("bat", "蝙蝠", 1.0),
+            new ArchetypeInfo("moth", "蛾", 0.8),
+            new ArchetypeInfo("dragonfly", "蜻蜓", 0.8),
         };
 
         public override IReadOnlyList<ArchetypeInfo> Archetypes => ArchetypeList;
 
         public static readonly (string, string)[] Forms =
         {
-            ("songbird", "Songbird"), ("raptor", "Raptor"), ("owl", "Owl"), ("bat", "Bat"), ("moth", "Moth"), ("dragonfly", "Dragonfly"),
+            ("songbird", "鸣禽"), ("raptor", "猛禽"), ("owl", "猫头鹰"), ("bat", "蝙蝠"), ("moth", "蛾"), ("dragonfly", "蜻蜓"),
         };
-        public static readonly (string, string)[] WingKinds = { ("feathered", "Feathered"), ("membrane", "Membrane"), ("insect", "Insect") };
-        public static readonly (string, string)[] Crests = { ("none", "None"), ("tuft", "Tuft"), ("crest", "Crest"), ("tufts", "Tufts") };
-        public static readonly (string, string)[] EarKinds = { ("none", "None"), ("pointed", "Pointed"), ("long", "Long"), ("round", "Round") };
-        public static readonly (string, string)[] EyeStyles = { ("round", "Round"), ("bead", "Beady"), ("button", "Large & cute"), ("compound", "Compound"), ("glow", "Glowing") };
-        public static readonly (string, string)[] TailShapes = { ("none", "None"), ("fan", "Fan"), ("forked", "Forked"), ("long", "Long"), ("stinger", "Stinger") };
-        public static readonly (string, string)[] WingPatterns = { ("none", "None"), ("eyespot", "Eye spots"), ("border", "Border"), ("bands", "Bands"), ("veins", "Veins") };
-        public static readonly (string, string)[] AntennaKinds = { ("none", "None"), ("thin", "Thin"), ("feathery", "Feathery") };
+        public static readonly (string, string)[] WingKinds = { ("feathered", "羽翼"), ("membrane", "膜翼"), ("insect", "虫翼") };
+        public static readonly (string, string)[] Crests = { ("none", "无"), ("tuft", "毛簇"), ("crest", "头冠"), ("tufts", "耳簇") };
+        public static readonly (string, string)[] EarKinds = { ("none", "无"), ("pointed", "尖耳"), ("long", "长"), ("round", "圆") };
+        public static readonly (string, string)[] EyeStyles = { ("round", "圆"), ("bead", "珠状"), ("button", "大而可爱"), ("compound", "复眼"), ("glow", "发光") };
+        public static readonly (string, string)[] TailShapes = { ("none", "无"), ("fan", "扇形"), ("forked", "分叉"), ("long", "长"), ("stinger", "尾刺") };
+        public static readonly (string, string)[] WingPatterns = { ("none", "无"), ("eyespot", "眼斑"), ("border", "边缘"), ("bands", "横带"), ("veins", "翅脉") };
+        public static readonly (string, string)[] AntennaKinds = { ("none", "无"), ("thin", "细"), ("feathery", "羽状") };
 
         protected override GeneSchema CreateSchema()
         {
             var b = new GeneSchemaBuilder(Id);
-            b.Group("body", "Body", GeneStream.Anatomy)
-             .Choice("form", "Body type", Forms, "songbird", "Archetype used as a template for proportions and features when rerolling.", 0.05)
-             .Float("size", "Size", 0, 1, 0.4, "", 0.08)
-             .Float("body.mass", "Body mass", 0, 1, 0.5, "Slender to spherical.", 0.1)
-             .Float("body.length", "Body length", 0, 1, 0.5, "", 0.1)
-             .Float("body.tilt", "Body tilt", 0, 1, 0.45, "Horizontal to upright posture.", 0.1)
-             .Float("abdomen.length", "Abdomen length", 0, 1, 0.3, "Insects only: short to very long abdomen.", 0.1)
-             .Float("neck.length", "Neck length", 0, 1, 0.3, "", 0.1);
-            b.Group("head", "Head", GeneStream.Anatomy)
-             .Float("head.size", "Head size", 0, 1, 0.5, "", 0.1)
-             .Float("head.beak", "Head beak", 0, 1, 0.45, "", 0.1)
-             .Float("head.beakCurve", "Head beak curve", 0, 1, 0.2, "", 0.1)
-             .Float("head.beakDepth", "Head beak depth", 0, 1, 0.45, "", 0.1)
-             .Float("head.eyeSize", "Head eye size", 0, 1, 0.55, "", 0.1)
-             .Choice("head.eyeStyle", "Head eye style", EyeStyles, "round", "", 0.08)
-             .Choice("head.crest", "Head crest", Crests, "none", "", 0.1)
-             .Float("head.crestSize", "Head crest size", 0, 1, 0.5, "", 0.1)
-             .Float("head.disc", "Head disc", 0, 1, 0.0, "Pale facial disc typical of owls.", 0.1)
-             .Choice("head.ears", "Head ears", EarKinds, "none", "", 0.1)
-             .Float("head.earSize", "Head ear size", 0, 1, 0.5, "", 0.1)
-             .Choice("head.antennae", "Head antennae", AntennaKinds, "none", "", 0.1);
-            b.Group("wings", "Wings", GeneStream.Anatomy)
-             .Choice("wings.kind", "Wings kind", WingKinds, "feathered", "", 0.05)
-             .Float("wings.span", "Wings span", 0, 1, 0.55, "", 0.1)
-             .Float("wings.chord", "Wings chord", 0, 1, 0.5, "Narrow wings for swift flight to broad gliding wings.", 0.1)
-             .Float("wings.feathers", "Wings feathers", 0, 1, 0.5, "Number of spread primary feathers or wing fingers.", 0.1);
-            b.Group("legs", "Legs", GeneStream.Anatomy)
-             .Float("legs.length", "Legs length", 0, 1, 0.4, "", 0.1)
-             .Float("legs.thickness", "Legs thickness", 0, 1, 0.4, "", 0.1)
-             .Float("legs.talons", "Legs talons", 0, 1, 0.4, "", 0.1)
-             .Choice("tail.shape", "Tail shape", TailShapes, "fan", "", 0.1)
-             .Float("tail.length", "Tail length", 0, 1, 0.5, "", 0.1);
-            b.Group("wingpattern", "Wing markings", GeneStream.Pattern)
-             .Choice("wings.pattern", "Wings pattern", WingPatterns, "none", "Insect wings only: eye spots, dotted borders, crossbands or veins.", 0.08);
+            b.Group("body", "身体", GeneStream.Anatomy)
+             .Choice("form", "体型", Forms, "songbird", "重新生成时作为比例与特征模板的形态。", 0.05)
+             .Float("size", "体型", 0, 1, 0.4, "", 0.08)
+             .Float("body.mass", "体重", 0, 1, 0.5, "从纤细到浑圆。", 0.1)
+             .Float("body.length", "体长", 0, 1, 0.5, "", 0.1)
+             .Float("body.tilt", "身体倾角", 0, 1, 0.45, "从水平到直立的姿态。", 0.1)
+             .Float("abdomen.length", "腹部长度", 0, 1, 0.3, "仅昆虫：腹部从短到极长。", 0.1)
+             .Float("neck.length", "颈长", 0, 1, 0.3, "", 0.1);
+            b.Group("head", "头部", GeneStream.Anatomy)
+             .Float("head.size", "头部大小", 0, 1, 0.5, "", 0.1)
+             .Float("head.beak", "喙", 0, 1, 0.45, "", 0.1)
+             .Float("head.beakCurve", "喙弯曲", 0, 1, 0.2, "", 0.1)
+             .Float("head.beakDepth", "喙深度", 0, 1, 0.45, "", 0.1)
+             .Float("head.eyeSize", "眼睛大小", 0, 1, 0.55, "", 0.1)
+             .Choice("head.eyeStyle", "眼睛样式", EyeStyles, "round", "", 0.08)
+             .Choice("head.crest", "头冠", Crests, "none", "", 0.1)
+             .Float("head.crestSize", "头冠大小", 0, 1, 0.5, "", 0.1)
+             .Float("head.disc", "面盘", 0, 1, 0.0, "猫头鹰特有的浅色面盘。", 0.1)
+             .Choice("head.ears", "耳朵", EarKinds, "none", "", 0.1)
+             .Float("head.earSize", "耳朵大小", 0, 1, 0.5, "", 0.1)
+             .Choice("head.antennae", "触角", AntennaKinds, "none", "", 0.1);
+            b.Group("wings", "翅膀", GeneStream.Anatomy)
+             .Choice("wings.kind", "翅膀类型", WingKinds, "feathered", "", 0.05)
+             .Float("wings.span", "翼展", 0, 1, 0.55, "", 0.1)
+             .Float("wings.chord", "翼弦", 0, 1, 0.5, "从适合疾飞的窄翼到宽大的滑翔翼。", 0.1)
+             .Float("wings.feathers", "羽毛", 0, 1, 0.5, "展开的初级飞羽或翼指数量。", 0.1);
+            b.Group("legs", "腿", GeneStream.Anatomy)
+             .Float("legs.length", "腿长", 0, 1, 0.4, "", 0.1)
+             .Float("legs.thickness", "腿粗", 0, 1, 0.4, "", 0.1)
+             .Float("legs.talons", "利爪", 0, 1, 0.4, "", 0.1)
+             .Choice("tail.shape", "尾形", TailShapes, "fan", "", 0.1)
+             .Float("tail.length", "尾长", 0, 1, 0.5, "", 0.1);
+            b.Group("wingpattern", "翅膀斑纹", GeneStream.Pattern)
+             .Choice("wings.pattern", "翅膀花纹", WingPatterns, "none", "仅昆虫翅膀：眼斑、点状边缘、横带或翅脉。", 0.08);
             SharedGenes.AddColorGenes(b);
             SharedGenes.AddPatternGenes(b, "feather");
             SharedGenes.AddMotionGenes(b);

@@ -19,7 +19,7 @@ namespace PixelCreatures.Workshop
         public override void _Ready()
         {
             MouseFilter = MouseFilterEnum.Stop;
-            TooltipText = "Minimap: click or drag to move the camera (M hides it)";
+            TooltipText = "小地图：单击或拖动可移动相机（M 键隐藏）";
         }
 
         public void SetMap(Texture2D? texture, int width, int height)

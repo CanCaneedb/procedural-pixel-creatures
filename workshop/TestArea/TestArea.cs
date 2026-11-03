@@ -197,7 +197,7 @@ namespace PixelCreatures.Workshop
         {
             _overlay = new PanelContainer { Position = new Vector2(10, 10) };
             var v = UiKit.Column(5);
-            v.AddChild(UiKit.Header("Test area"));
+            v.AddChild(UiKit.Header("试验场地"));
             _hud = UiKit.Label("", 13);
             _perf = UiKit.Label("", 12, UiKit.TextDim);
             v.AddChild(_hud);
@@ -211,40 +211,40 @@ namespace PixelCreatures.Workshop
                 CustomMinimumSize = new Vector2(170, 0),
                 SizeFlagsVertical = SizeFlags.ShrinkCenter,
                 FocusMode = FocusModeEnum.None,
-                TooltipText = $"Number of creatures on the map (1–{MaxCreatures}, keys +/-)",
+                TooltipText = $"地图上的生物数量（1–{MaxCreatures}，可用 +/- 键调整）",
             };
             _populationSlider.ValueChanged += value => SetPopulation((int)Math.Round(value));
             _populationValue = UiKit.Label("", 13);
             _populationValue.CustomMinimumSize = new Vector2(34, 0);
-            var populationRow = UiKit.Row(6, Caption("Creatures"), _populationSlider, _populationValue);
+            var populationRow = UiKit.Row(6, Caption("生物"), _populationSlider, _populationValue);
             foreach (int n in new[] { 1, 10, 25, 50, MaxCreatures })
             {
                 int count = n;
-                populationRow.AddChild(UiKit.Button($"{n}", () => SetPopulation(count), $"{n} {(n == 1 ? "creature" : "creatures")} on the map"));
+                populationRow.AddChild(UiKit.Button($"{n}", () => SetPopulation(count), $"地图上放 {n} 个生物"));
             }
             v.AddChild(populationRow);
-            populationRow.AddChild(UiKit.Button("Reroll", RerollPopulation, "Generate a fresh population in this landscape (G)"));
+            populationRow.AddChild(UiKit.Button("重掷", RerollPopulation, "在这片地形上重新生成一批生物（G）"));
 
             _mapValue = UiKit.Label("", 13);
             _mapValue.CustomMinimumSize = new Vector2(150, 0);
             _mapValue.HorizontalAlignment = HorizontalAlignment.Center;
-            v.AddChild(UiKit.Row(6, Caption("Map"),
-                UiKit.Button("−", () => SetMapSize(_mapIndex - 1), "Smaller map (PgDn)"),
+            v.AddChild(UiKit.Row(6, Caption("地图"),
+                UiKit.Button("−", () => SetMapSize(_mapIndex - 1), "缩小地图（PgDn）"),
                 _mapValue,
-                UiKit.Button("+", () => SetMapSize(_mapIndex + 1), "Larger map (PgUp)"),
-                UiKit.Button("New map", NewMap, "New map of the same size (N)")));
+                UiKit.Button("+", () => SetMapSize(_mapIndex + 1), "放大地图（PgUp）"),
+                UiKit.Button("新地图", NewMap, "生成一张同样大小的新地图（N）")));
 
             _zoomValue = UiKit.Label("", 13);
             _zoomValue.CustomMinimumSize = new Vector2(26, 0);
             _zoomValue.HorizontalAlignment = HorizontalAlignment.Center;
-            _followButton = UiKit.Toggle("Camera follows", true, SetFollow, "The camera follows the controlled creature (F). Drag with the right or middle mouse button to move the camera freely");
-            _minimapButton = UiKit.Toggle("Minimap", true, ShowMinimap, "Minimap on/off (M); clicking the minimap moves the camera");
-            v.AddChild(UiKit.Row(6, Caption("Zoom"),
-                UiKit.Button("−", () => SetZoom(_zoom - 1), "Zoom out (mouse wheel)"),
+            _followButton = UiKit.Toggle("相机跟随", true, SetFollow, "相机跟随被操控的生物（F）。用鼠标右键或中键拖动可自由移动相机");
+            _minimapButton = UiKit.Toggle("小地图", true, ShowMinimap, "开／关小地图（M）；单击小地图可移动相机");
+            v.AddChild(UiKit.Row(6, Caption("缩放"),
+                UiKit.Button("−", () => SetZoom(_zoom - 1), "缩小（鼠标滚轮）"),
                 _zoomValue,
-                UiKit.Button("+", () => SetZoom(_zoom + 1), "Zoom in (mouse wheel)"),
+                UiKit.Button("+", () => SetZoom(_zoom + 1), "放大（鼠标滚轮）"),
                 _followButton, _minimapButton,
-                UiKit.Button("Back to workshop", Back, "Return to the workshop (Esc)")));
+                UiKit.Button("返回工坊", Back, "返回工坊（Esc）")));
             _status = UiKit.Label("", 12, UiKit.Accent);
             v.AddChild(_status);
             _overlay.AddChild(v);
@@ -320,7 +320,7 @@ namespace PixelCreatures.Workshop
             _mapTask = null;
             _mapCancel = null;
             if (task.Status == TaskStatus.RanToCompletion) ApplyMap(task.Result);
-            else if (task.IsFaulted) GD.PushError("Map could not be generated: " + task.Exception?.GetBaseException().Message);
+            else if (task.IsFaulted) GD.PushError("地图生成失败：" + task.Exception?.GetBaseException().Message);
             UpdateMapUi();
         }
 
@@ -465,7 +465,7 @@ namespace PixelCreatures.Workshop
             for (int y = 24; y < _map.Height - 24; y += 3)
                 for (int x = 24; x < _map.Width - 24; x += 3)
                     if (SpotValid(new Vector2(x, y), aquatic, flying, radius)) return GodotConvert.ScreenToGround(new Vector2(x, y));
-            throw new InvalidOperationException("The map has no suitable habitat for this creature.");
+            throw new InvalidOperationException("地图上没有适合该生物栖息的区域。");
         }
 
         // ------------------------------------------------------------------ creatures
@@ -894,20 +894,27 @@ namespace PixelCreatures.Workshop
             _hudTimer = 0.25;
             string pname = _player?.Genome?.Name ?? "-";
             int visible = VisibleCreatureCount;
-            _hud.Text = "WASD/arrow keys walk, Shift run, Space action, R rest, H hit, Tab/left click take control of a creature\n" +
-                        "Mouse wheel zoom, right-drag camera, F follow, M minimap, PgUp/PgDn map size, N new map, G reroll, F1 overlay\n" +
-                        $"Player: {pname} ({_player?.State})   Creatures: {CreatureCount}, {visible} visible";
+            string pstate = "-";
+            if (_player != null)
+            {
+                var loco = _player.Model?.Anatomy.Rig.Locomotion ?? LocomotionKind.Legged;
+                bool airborne = _player.Motor != null && _player.Motor.Altitude > 2.0 && loco != LocomotionKind.Swim;
+                pstate = AnimationPanel.StateLabel(_player.State, loco, airborne);
+            }
+            _hud.Text = "WASD/方向键 行走，Shift 奔跑，空格 动作，R 休息，H 受击，Tab/左键 接管一个生物\n" +
+                        "滚轮 缩放，右键拖动 移动相机，F 跟随，M 小地图，PgUp/PgDn 地图大小，N 新地图，G 重掷，F1 叠加信息\n" +
+                        $"玩家：{pname}（{pstate}）   生物：{CreatureCount}，可见 {visible}";
             if (_frameTimes.Count > 10)
             {
                 var sorted = _frameTimes.OrderBy(x => x).ToList();
                 double p50 = sorted[sorted.Count / 2], p95 = sorted[(int)(sorted.Count * 0.95)], p99 = sorted[Math.Min(sorted.Count - 1, (int)(sorted.Count * 0.99))];
-                _perf.Text = $"{Engine.GetFramesPerSecond():0} FPS · Frame p50 {p50:0.0} ms / p95 {p95:0.0} ms / p99 {p99:0.0} ms · Raster {CreatureRenderQueue.LastRasterMs:0.00} ms for {CreatureRenderQueue.LastBatchSize} · Upload {CreatureRenderQueue.LastUploadMs:0.00} ms";
+                _perf.Text = $"{Engine.GetFramesPerSecond():0} FPS · 帧耗时 p50 {p50:0.0} ms / p95 {p95:0.0} ms / p99 {p99:0.0} ms · 光栅化 {CreatureRenderQueue.LastRasterMs:0.00} ms（{CreatureRenderQueue.LastBatchSize}）· 上传 {CreatureRenderQueue.LastUploadMs:0.00} ms";
             }
             string status = string.Empty;
-            if (_mapTask != null) status = $"Generating map {MapSize.All[_mapIndex]}…";
-            else if (CreatureCount < _targetPopulation) status = $"Creatures appearing… {CreatureCount}/{_targetPopulation}";
+            if (_mapTask != null) status = $"正在生成地图 {MapSize.All[_mapIndex]}…";
+            else if (CreatureCount < _targetPopulation) status = $"生物正在出现… {CreatureCount}/{_targetPopulation}";
             else if (_mapIndex < MapSize.All.Length - 1 && _map.Width * (double)_map.Height / CreatureCount < 9000)
-                status = "Tip: it's getting crowded. Use “+” next to Map or PgUp for a larger map.";
+                status = "提示：地图有点挤了。用“地图”旁的“+”或 PgUp 换一张更大的地图。";
             _status.Text = status;
             _status.Visible = status.Length > 0;
         }

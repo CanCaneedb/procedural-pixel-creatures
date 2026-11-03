@@ -30,18 +30,18 @@ namespace PixelCreatures.Workshop
             AddThemeConstantOverride("separation", 4);
             var controls = new HBoxContainer();
             controls.AddThemeConstantOverride("separation", 6);
-            controls.AddChild(UiKit.Label("Partner B:", 13));
-            _source = new OptionButton { FocusMode = FocusModeEnum.None, CustomMinimumSize = new Vector2(240, 0), TooltipText = "Second parent (must have the same body-plan family)" };
+            controls.AddChild(UiKit.Label("亲代 B：", 13));
+            _source = new OptionButton { FocusMode = FocusModeEnum.None, CustomMinimumSize = new Vector2(240, 0), TooltipText = "第二个亲代（体型类别必须相同）" };
             _source.ItemSelected += _ => PickPartnerFromSource();
             controls.AddChild(_source);
-            controls.AddChild(UiKit.Button("Another partner", () => { _partnerSeed++; _source.Selected = 0; PickPartnerFromSource(); }, "Generate a new random partner of the same family"));
-            controls.AddChild(UiKit.Button("From file…", LoadPartner, "Load the partner from a preset"));
-            controls.AddChild(UiKit.Label("Mutation", 13, UiKit.TextDim));
+            controls.AddChild(UiKit.Button("换个配偶", () => { _partnerSeed++; _source.Selected = 0; PickPartnerFromSource(); }, "随机生成一个同类别的新配偶"));
+            controls.AddChild(UiKit.Button("从文件…", LoadPartner, "从预设载入配偶"));
+            controls.AddChild(UiKit.Label("变异", 13, UiKit.TextDim));
             var mut = new HSlider { MinValue = 0, MaxValue = 0.6, Step = 0.01, Value = _mutation, CustomMinimumSize = new Vector2(90, 0), SizeFlagsVertical = SizeFlags.ShrinkCenter, FocusMode = FocusModeEnum.None };
             mut.ValueChanged += v => { _mutation = v; Schedule(); };
             controls.AddChild(mut);
             controls.AddChild(UiKit.Spacer(0, 0, true));
-            var again = new Button { Text = "Cross again", Icon = Icons.Get("dice", 1), FocusMode = FocusModeEnum.None };
+            var again = new Button { Text = "再杂交一次", Icon = Icons.Get("dice", 1), FocusMode = FocusModeEnum.None };
             again.Pressed += () => { _cross++; Regenerate(); };
             controls.AddChild(again);
             AddChild(controls);
@@ -53,9 +53,9 @@ namespace PixelCreatures.Workshop
             AddChild(row);
             var parents = new VBoxContainer { SizeFlagsHorizontal = SizeFlags.ExpandFill, SizeFlagsStretchRatio = 0.8f };
             row.AddChild(parents);
-            _a = new CreatureCard { SizeFlagsVertical = SizeFlags.ExpandFill }; parents.AddChild(_a); _a.Build(main, "Parent A", new Vector2(180, 60));
-            _b = new CreatureCard { SizeFlagsVertical = SizeFlags.ExpandFill }; parents.AddChild(_b); _b.Build(main, "Parent B", new Vector2(180, 60));
-            _b.AddButton("Edit B", () => { if (_partner != null) _main.LoadGenome(_partner, "Partner B loaded into the editor"); }, "Open partner B in the editor");
+            _a = new CreatureCard { SizeFlagsVertical = SizeFlags.ExpandFill }; parents.AddChild(_a); _a.Build(main, "亲代 A", new Vector2(180, 60));
+            _b = new CreatureCard { SizeFlagsVertical = SizeFlags.ExpandFill }; parents.AddChild(_b); _b.Build(main, "亲代 B", new Vector2(180, 60));
+            _b.AddButton("编辑 B", () => { if (_partner != null) _main.LoadGenome(_partner, "亲代 B 已载入编辑器"); }, "在编辑器中打开亲代 B");
             row.AddChild(new VSeparator());
             var grid = new GridContainer { Columns = 2, SizeFlagsHorizontal = SizeFlags.ExpandFill, SizeFlagsVertical = SizeFlags.ExpandFill, SizeFlagsStretchRatio = 2.2f };
             grid.AddThemeConstantOverride("h_separation", 6);
@@ -66,8 +66,8 @@ namespace PixelCreatures.Workshop
                 int idx = i;
                 var c = new CreatureCard { SizeFlagsVertical = SizeFlags.ExpandFill };
                 grid.AddChild(c);
-                c.Build(main, $"Offspring {i + 1}", new Vector2(160, 70));
-                c.AddButton("Adopt", () => Adopt(idx), "Load this offspring into the editor");
+                c.Build(main, $"子代 {i + 1}", new Vector2(160, 70));
+                c.AddButton("采用", () => Adopt(idx), "把这个子代载入编辑器");
                 _children[i] = c;
             }
             RefreshSources();
@@ -78,12 +78,12 @@ namespace PixelCreatures.Workshop
         {
             _samples.Clear();
             _source.Clear();
-            _source.AddItem("Random partner");
+            _source.AddItem("随机配偶");
             string fam = _main.State.Genome.FamilyId;
             foreach (var s in SampleLibrary.Load().Where(x => x.Genome.FamilyId == fam))
             {
                 _samples.Add(s.Genome);
-                _source.AddItem("Sample: " + s.Genome.Name);
+                _source.AddItem("样本：" + s.Genome.Name);
             }
             _source.Selected = 0;
         }
@@ -104,16 +104,16 @@ namespace PixelCreatures.Workshop
             {
                 Access = FileDialog.AccessEnum.Userdata,
                 FileMode = FileDialog.FileModeEnum.OpenFile,
-                Filters = new[] { "*.json ; Creature presets" },
+                Filters = new[] { "*.json ; 生物预设" },
                 CurrentDir = "user://presets",
-                Title = "Load partner B",
+                Title = "载入亲代 B",
                 Size = new Vector2I(720, 480),
                 UseNativeDialog = false,
             };
             dlg.FileSelected += path =>
             {
                 var res = CreatureRuntime.LoadPreset(path);
-                if (!res.Ok) { _message.Text = "Loading failed: " + res.Describe(); return; }
+                if (!res.Ok) { _message.Text = "载入失败：" + res.Describe(); return; }
                 _partner = res.Genome;
                 Regenerate();
                 dlg.QueueFree();
@@ -154,22 +154,22 @@ namespace PixelCreatures.Workshop
         private void Regenerate()
         {
             var a = _main.State.Genome;
-            _a.SetGenome(a, "Parent A: " + a.Name, a.FamilyId);
+            _a.SetGenome(a, "亲代 A：" + a.Name, a.FamilyId);
             if (_partner == null) return;
-            _b.SetGenome(_partner, "Parent B: " + _partner.Name, _partner.FamilyId);
+            _b.SetGenome(_partner, "亲代 B：" + _partner.Name, _partner.FamilyId);
             if (!GenomeOps.CanCross(a, _partner, out string reason))
             {
                 _message.Text = reason;
                 foreach (var c in _children) c.SetGenome(null, "—", "");
                 return;
             }
-            _message.Text = "Linked trait groups are inherited together (A, B or mixed A+B).";
+            _message.Text = "关联的特征组会一起遗传（来自 A、B 或 A+B 混合）。";
             for (int i = 0; i < 4; i++)
             {
                 ulong seed = StableHash.Derive(StableHash.Combine(StableHash.Combine(a.ContentHash, _partner.ContentHash), _cross), "cross", i);
                 var r = GenomeOps.Cross(a, _partner, seed, new MutationSettings { Strength = _mutation });
                 var child = r.Child.WithName(NameGenerator.Generate(new Rng(seed)));
-                _children[i].SetGenome(child, $"Offspring {i + 1}: {child.Name}", Provenance(a.Schema, r.Provenance));
+                _children[i].SetGenome(child, $"子代 {i + 1}：{child.Name}", Provenance(a.Schema, r.Provenance));
             }
         }
 
@@ -188,7 +188,7 @@ namespace PixelCreatures.Workshop
         {
             var g = _children[i].Genome;
             if (g == null) return;
-            _main.State.Set(g, $"Adopted offspring {i + 1}");
+            _main.State.Set(g, $"已采用子代 {i + 1}");
         }
     }
 }

@@ -43,29 +43,29 @@ namespace PixelCreatures.Workshop
             Actor = actor;
             Stage = stage;
             AddThemeConstantOverride("separation", 6);
-            AddChild(UiKit.Header("Animation"));
+            AddChild(UiKit.Header("动画"));
 
             // --- movement state
             var modes = new HBoxContainer();
             modes.AddThemeConstantOverride("separation", 4);
             _modeButtons = new[]
             {
-                UiKit.Button("Stand", () => SetMode(MoveMode.Stand), "Idle: breathing, blinking, small gestures (1)"),
-                UiKit.Button("Walk", () => SetMode(MoveMode.Walk), "Slow locomotion (2)"),
-                UiKit.Button("Run", () => SetMode(MoveMode.Run), "Fast locomotion (3)"),
+                UiKit.Button("站立", () => SetMode(MoveMode.Stand), "待机：呼吸、眨眼、小幅动作（1）"),
+                UiKit.Button("行走", () => SetMode(MoveMode.Walk), "慢速移动（2）"),
+                UiKit.Button("奔跑", () => SetMode(MoveMode.Run), "快速移动（3）"),
             };
             foreach (var b in _modeButtons) { b.ToggleMode = true; b.SizeFlagsHorizontal = SizeFlags.ExpandFill; modes.AddChild(b); }
             AddChild(modes);
             var acts = new HBoxContainer();
             acts.AddThemeConstantOverride("separation", 4);
-            var action = UiKit.Button("Action", () => Actor.TriggerAction(), "Expressive action (Space)");
-            var hit = UiKit.Button("Hit", () => Actor.TriggerHit(DirVector(Direction), 1f), "Hit reaction from the front (H)");
-            _restButton = UiKit.Toggle("Rest", false, on => { Actor.Resting = on; Emit(); }, "Lie down / sleep, with transitions (R)");
+            var action = UiKit.Button("动作", () => Actor.TriggerAction(), "富有表现力的动作（空格）");
+            var hit = UiKit.Button("受击", () => Actor.TriggerHit(DirVector(Direction), 1f), "来自正面的受击反应（H）");
+            _restButton = UiKit.Toggle("休息", false, on => { Actor.Resting = on; Emit(); }, "趴下／睡觉，含过渡动作（R）");
             foreach (var b in new[] { action, hit, _restButton }) { b.SizeFlagsHorizontal = SizeFlags.ExpandFill; acts.AddChild(b); }
             AddChild(acts);
 
             // --- direction pad
-            AddChild(UiKit.Label("Direction", 13, UiKit.TextDim));
+            AddChild(UiKit.Label("朝向", 13, UiKit.TextDim));
             var grid = new GridContainer { Columns = 3 };
             grid.AddThemeConstantOverride("h_separation", 3);
             grid.AddThemeConstantOverride("v_separation", 3);
@@ -74,7 +74,7 @@ namespace PixelCreatures.Workshop
             {
                 if (d < 0)
                 {
-                    var turn = new Button { Text = "45°", FocusMode = FocusModeEnum.None, TooltipText = "Turn by 45° (Q/E)", CustomMinimumSize = new Vector2(34, 30) };
+                    var turn = new Button { Text = "45°", FocusMode = FocusModeEnum.None, TooltipText = "旋转 45°（Q/E）", CustomMinimumSize = new Vector2(34, 30) };
                     turn.Pressed += () => SetDirection((Direction + 7) % 8);
                     grid.AddChild(turn);
                     continue;
@@ -92,51 +92,51 @@ namespace PixelCreatures.Workshop
             // --- speed
             _speedLabel = UiKit.Label("Speed", 13, UiKit.TextDim);
             AddChild(_speedLabel);
-            _speed = new HSlider { MinValue = 0, MaxValue = 1, Step = 0.01, Value = SpeedBlend, FocusMode = FocusModeEnum.None, TooltipText = "Blend between walking and running speed" };
+            _speed = new HSlider { MinValue = 0, MaxValue = 1, Step = 0.01, Value = SpeedBlend, FocusMode = FocusModeEnum.None, TooltipText = "在行走与奔跑速度之间混合" };
             _speed.ValueChanged += v => { SpeedBlend = v; ApplyMovement(); };
             AddChild(_speed);
 
             // --- time controls
-            AddChild(UiKit.Label("Time", 13, UiKit.TextDim));
+            AddChild(UiKit.Label("时间", 13, UiKit.TextDim));
             var time = new HBoxContainer();
             time.AddThemeConstantOverride("separation", 4);
-            _pauseButton = new Button { Icon = Icons.Get("pause"), ToggleMode = true, FocusMode = FocusModeEnum.None, TooltipText = "Pause (P)" };
+            _pauseButton = new Button { Icon = Icons.Get("pause"), ToggleMode = true, FocusMode = FocusModeEnum.None, TooltipText = "暂停（P）" };
             _pauseButton.Toggled += on => { Actor.Paused = on; _pauseButton.Icon = Icons.Get(on ? "play" : "pause"); Emit(); };
-            var step = new Button { Icon = Icons.Get("step"), FocusMode = FocusModeEnum.None, TooltipText = "Single step: next frame (N)" };
+            var step = new Button { Icon = Icons.Get("step"), FocusMode = FocusModeEnum.None, TooltipText = "单步：前进一帧（N）" };
             step.Pressed += () => { if (!Actor.Paused) _pauseButton.ButtonPressed = true; Actor.StepFrames(1); };
             time.AddChild(_pauseButton);
             time.AddChild(step);
-            _slowmo = new HSlider { MinValue = 0.05, MaxValue = 1.0, Step = 0.05, Value = 1.0, SizeFlagsHorizontal = SizeFlags.ExpandFill, SizeFlagsVertical = SizeFlags.ShrinkCenter, FocusMode = FocusModeEnum.None, TooltipText = "Slow motion" };
+            _slowmo = new HSlider { MinValue = 0.05, MaxValue = 1.0, Step = 0.05, Value = 1.0, SizeFlagsHorizontal = SizeFlags.ExpandFill, SizeFlagsVertical = SizeFlags.ShrinkCenter, FocusMode = FocusModeEnum.None, TooltipText = "慢动作" };
             _slowLabel = UiKit.Label("100%", 12, UiKit.TextDim);
             _slowmo.ValueChanged += v => { Actor.TimeScale = (float)v; _slowLabel.Text = $"{v * 100:0}%"; };
             time.AddChild(_slowmo);
             time.AddChild(_slowLabel);
             AddChild(time);
 
-            var rate = new OptionButton { FocusMode = FocusModeEnum.None, TooltipText = "Pixel animation rate: how often per second a new pose is rasterized" };
+            var rate = new OptionButton { FocusMode = FocusModeEnum.None, TooltipText = "像素动画帧率：每秒重新光栅化新姿势的次数" };
             int[] rates = { 8, 12, 15, 24, 30, 60 };
             foreach (int r in rates) rate.AddItem($"{r} fps");
             rate.Selected = Array.IndexOf(rates, Actor.AnimationFps) >= 0 ? Array.IndexOf(rates, Actor.AnimationFps) : 2;
             rate.ItemSelected += i => Actor.AnimationFps = rates[i];
-            var stepped = UiKit.Toggle("Stepped", Actor.SteppedMovement, on => Actor.SteppedMovement = on, "Update the position only on animation frames (classic pixel look)");
+            var stepped = UiKit.Toggle("步进式", Actor.SteppedMovement, on => Actor.SteppedMovement = on, "仅在动画帧更新位置（经典像素观感）");
             AddChild(UiKit.Row(4, rate, stepped));
 
             // --- overlays
-            AddChild(UiKit.Label("Display", 13, UiKit.TextDim));
+            AddChild(UiKit.Label("显示", 13, UiKit.TextDim));
             var ov = new HBoxContainer();
             ov.AddThemeConstantOverride("separation", 4);
-            ov.AddChild(UiKit.Toggle("Rig", false, on => Actor.ShowRig = on, "Show the bones of the rig"));
-            ov.AddChild(UiKit.Toggle("Contacts", false, on => Actor.ShowContacts = on, "Show foot contacts (green = planted) and the canvas bounds"));
-            ov.AddChild(UiKit.Toggle("Shadow", true, on => { Actor.DrawShadow = on; Actor.RequestRender(); }, "Ground shadow"));
+            ov.AddChild(UiKit.Toggle("骨架", false, on => Actor.ShowRig = on, "显示骨架的骨骼"));
+            ov.AddChild(UiKit.Toggle("接触点", false, on => Actor.ShowContacts = on, "显示脚部接触点（绿色 = 着地）与画布边界"));
+            ov.AddChild(UiKit.Toggle("阴影", true, on => { Actor.DrawShadow = on; Actor.RequestRender(); }, "地面阴影"));
             AddChild(ov);
-            var bg = new OptionButton { FocusMode = FocusModeEnum.None, SizeFlagsHorizontal = SizeFlags.ExpandFill, TooltipText = "Preview background (aquatic creatures switch to water automatically)" };
-            string[] bgs = { "Grass", "Meadow", "Dirt", "Sand", "Water", "Neutral", "Dark" };
+            var bg = new OptionButton { FocusMode = FocusModeEnum.None, SizeFlagsHorizontal = SizeFlags.ExpandFill, TooltipText = "预览背景（水生生物会自动切换到水面）" };
+            string[] bgs = { "草地", "草甸", "泥土", "沙地", "水面", "中性", "深色" };
             foreach (var b in bgs) bg.AddItem(b);
             bg.ItemSelected += i => { Stage.Background = (StageBackground)(int)i; _userBackground = true; Emit(); };
             _bgOption = bg;
-            var zoomOut = UiKit.Button("-", () => Stage.SetZoom(Math.Max(1, Stage.EffectiveZoom - 1)), "Zoom out");
-            var zoomAuto = UiKit.Button("Auto", () => Stage.SetZoom(0), "Automatic integer zoom");
-            var zoomIn = UiKit.Button("+", () => Stage.SetZoom(Math.Min(16, Stage.EffectiveZoom + 1)), "Zoom in");
+            var zoomOut = UiKit.Button("-", () => Stage.SetZoom(Math.Max(1, Stage.EffectiveZoom - 1)), "缩小");
+            var zoomAuto = UiKit.Button("自动", () => Stage.SetZoom(0), "自动使用整数缩放");
+            var zoomIn = UiKit.Button("+", () => Stage.SetZoom(Math.Min(16, Stage.EffectiveZoom + 1)), "放大");
             AddChild(UiKit.Row(4, bg, zoomOut, zoomAuto, zoomIn));
 
             _status = UiKit.Label("", 12, UiKit.TextDim);
@@ -204,9 +204,21 @@ namespace PixelCreatures.Workshop
             if (Mode != MoveMode.Stand)
                 speed = DMath.Lerp(model.Motion.WalkSpeed, model.Motion.RunSpeed, SpeedBlend);
             Actor.MoveVelocity = DirVector(Direction) * (float)speed;
-            _speedLabel.Text = Mode == MoveMode.Stand ? "Speed (standing)" : $"Speed {speed:0} px/s";
+            _speedLabel.Text = Mode == MoveMode.Stand ? "速度（站立）" : $"速度 {speed:0} px/s";
             Emit();
         }
+
+        /// <summary>Localized name of a motion state (shared with the test area HUD).</summary>
+        public static string StateLabel(MotionStateKind state, LocomotionKind loco, bool airborne) => state switch
+        {
+            MotionStateKind.Idle => loco == LocomotionKind.Swim ? "水中漂浮" : (airborne ? "悬停" : "站立"),
+            MotionStateKind.Walk => loco switch { LocomotionKind.Swim => "游动", LocomotionKind.Serpentine => "蜿蜒滑行", LocomotionKind.Hop => "跳跃", LocomotionKind.Float => "滑翔", _ => airborne ? "飞行" : "行走" },
+            MotionStateKind.Run => loco switch { LocomotionKind.Swim => "快速游动", LocomotionKind.Serpentine => "快速滑行", LocomotionKind.Hop => "远距离跳跃", LocomotionKind.Float => "快速滑翔", _ => airborne ? "飞行" : "奔跑" },
+            MotionStateKind.Action => "动作",
+            MotionStateKind.Hit => "受击",
+            MotionStateKind.Rest => "休息／睡眠",
+            _ => "过渡",
+        };
 
         public override void _Process(double delta)
         {
@@ -214,17 +226,8 @@ namespace PixelCreatures.Workshop
             var m = Actor.Motor;
             var loco = Actor.Model?.Anatomy.Rig.Locomotion ?? LocomotionKind.Legged;
             bool airborne = m.Altitude > 2.0 && loco != LocomotionKind.Swim;
-            string state = m.State switch
-            {
-                MotionStateKind.Idle => loco == LocomotionKind.Swim ? "Floating in water" : (airborne ? "Hovering" : "Standing"),
-                MotionStateKind.Walk => loco switch { LocomotionKind.Swim => "Swimming", LocomotionKind.Serpentine => "Slithering", LocomotionKind.Hop => "Hopping", LocomotionKind.Float => "Gliding", _ => airborne ? "Flying" : "Walking" },
-                MotionStateKind.Run => loco switch { LocomotionKind.Swim => "Swimming fast", LocomotionKind.Serpentine => "Slithering fast", LocomotionKind.Hop => "Hopping far", LocomotionKind.Float => "Gliding fast", _ => airborne ? "Flying" : "Running" },
-                MotionStateKind.Action => "Action",
-                MotionStateKind.Hit => "Hit",
-                MotionStateKind.Rest => "Rest/sleep",
-                _ => "Transition",
-            };
-            _status.Text = $"State: {state}\nSpeed: {m.Speed:0.0} px/s  Facing: {PixelCamera.DirectionLabels[PixelCamera.YawToDirection8(m.Yaw)]}\nFrame rate: {Actor.AnimationFps} fps  Zoom: {Stage.EffectiveZoom}x\nFrame: {Actor.Frame?.Width}x{Actor.Frame?.Height}";
+            string state = StateLabel(m.State, loco, airborne);
+            _status.Text = $"状态：{state}\n速度：{m.Speed:0.0} px/s  朝向：{PixelCamera.DirectionLabels[PixelCamera.YawToDirection8(m.Yaw)]}\n帧率：{Actor.AnimationFps} fps  缩放：{Stage.EffectiveZoom}×\n帧尺寸：{Actor.Frame?.Width}×{Actor.Frame?.Height}";
         }
     }
 }

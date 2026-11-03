@@ -13,61 +13,61 @@ namespace PixelCreatures.Core.Families
     public sealed class AquaticFamily : CreatureFamilyBase
     {
         public override string Id => "aquatic";
-        public override string DisplayName => "Aquatic Creatures";
-        public override string Description => "Reef fish, sharks, rays, pufferfish, anglerfish and eels: streamlined bodies with paired and unpaired fins, tail strokes or undulating pectoral fins, hovering in open water and resting on the bottom.";
+        public override string DisplayName => "水生生物";
+        public override string Description => "珊瑚鱼、鲨鱼、鳐鱼、河豚、鮟鱇与鳗鱼：流线型身体，成对鳍与奇鳍，摆尾或波动胸鳍，悬停于开阔水域并伏卧水底。";
         public override int Order => 70;
 
         private static readonly ArchetypeInfo[] ArchetypeList =
         {
-            new ArchetypeInfo("reef", "Reef fish", 1.3),
-            new ArchetypeInfo("shark", "Shark", 1.0),
-            new ArchetypeInfo("ray", "Ray", 0.9),
-            new ArchetypeInfo("puffer", "Pufferfish", 0.8),
-            new ArchetypeInfo("angler", "Anglerfish", 0.8),
-            new ArchetypeInfo("eel", "Eel", 0.8),
+            new ArchetypeInfo("reef", "珊瑚鱼", 1.3),
+            new ArchetypeInfo("shark", "鲨鱼", 1.0),
+            new ArchetypeInfo("ray", "鳐鱼", 0.9),
+            new ArchetypeInfo("puffer", "河豚", 0.8),
+            new ArchetypeInfo("angler", "鮟鱇", 0.8),
+            new ArchetypeInfo("eel", "鳗鱼", 0.8),
         };
 
         public override IReadOnlyList<ArchetypeInfo> Archetypes => ArchetypeList;
 
         public static readonly (string, string)[] Forms =
         {
-            ("reef", "Reef fish"), ("shark", "Shark"), ("ray", "Ray"), ("puffer", "Pufferfish"), ("angler", "Anglerfish"), ("eel", "Eel"),
+            ("reef", "珊瑚鱼"), ("shark", "鲨鱼"), ("ray", "鳐鱼"), ("puffer", "河豚"), ("angler", "鮟鱇"), ("eel", "鳗鱼"),
         };
-        public static readonly (string, string)[] SwimStyles = { ("tail", "Tail"), ("wings", "Wings"), ("undulate", "Undulate") };
-        public static readonly (string, string)[] DorsalShapes = { ("none", "None"), ("pointed", "Pointed"), ("blade", "Blade"), ("sail", "Sail"), ("spines", "Spines") };
-        public static readonly (string, string)[] TailShapes = { ("fan", "Fan"), ("forked", "Forked"), ("crescent", "Crescent"), ("pointed", "Pointed"), ("whip", "Whip") };
-        public static readonly (string, string)[] TeethKinds = { ("none", "None"), ("small", "Small"), ("fangs", "Fangs"), ("sabre", "Sabre") };
-        public static readonly (string, string)[] EyeStyles = { ("round", "Round"), ("bead", "Beady"), ("button", "Large & cute"), ("glow", "Glowing") };
-        public static readonly (string, string)[] Extras = { ("none", "None"), ("lure", "Lure"), ("barbels", "Barbels"), ("spikes", "Spikes") };
+        public static readonly (string, string)[] SwimStyles = { ("tail", "尾部"), ("wings", "翼鳍"), ("undulate", "波动") };
+        public static readonly (string, string)[] DorsalShapes = { ("none", "无"), ("pointed", "尖形"), ("blade", "刀形"), ("sail", "帆状"), ("spines", "棘刺") };
+        public static readonly (string, string)[] TailShapes = { ("fan", "扇形"), ("forked", "叉形"), ("crescent", "新月形"), ("pointed", "尖形"), ("whip", "鞭形") };
+        public static readonly (string, string)[] TeethKinds = { ("none", "无"), ("small", "小"), ("fangs", "獠牙"), ("sabre", "剑齿") };
+        public static readonly (string, string)[] EyeStyles = { ("round", "圆"), ("bead", "珠状"), ("button", "大而可爱"), ("glow", "发光") };
+        public static readonly (string, string)[] Extras = { ("none", "无"), ("lure", "诱饵"), ("barbels", "触须"), ("spikes", "尖刺") };
 
         protected override GeneSchema CreateSchema()
         {
             var b = new GeneSchemaBuilder(Id);
-            b.Group("body", "Body", GeneStream.Anatomy)
-             .Choice("form", "Body type", Forms, "reef", "Archetype used as a template for proportions and features when rerolling.", 0.05)
-             .Float("size", "Size", 0, 1, 0.5, "", 0.08)
-             .Float("body.length", "Body length", 0, 1, 0.5, "", 0.1)
-             .Float("body.depth", "Body depth", 0, 1, 0.5, "Flat like an eel to a deep-bodied fish.", 0.1)
-             .Float("body.width", "Body width", 0, 1, 0.45, "Laterally flattened to round.", 0.1)
-             .Choice("swim.style", "Swim style", SwimStyles, "tail", "", 0.05);
-            b.Group("head", "Head", GeneStream.Anatomy)
-             .Float("head.size", "Head size", 0, 1, 0.5, "", 0.1)
-             .Float("head.snout", "Head snout", 0, 1, 0.4, "", 0.1)
-             .Float("head.jaw", "Head jaw", 0, 1, 0.45, "", 0.1)
-             .Choice("head.teeth", "Head teeth", TeethKinds, "none", "", 0.1)
-             .Float("head.eyeSize", "Head eye size", 0, 1, 0.55, "", 0.1)
-             .Choice("head.eyeStyle", "Head eye style", EyeStyles, "round", "", 0.08)
-             .Choice("head.extra", "Head extra", Extras, "none", "Glowing lure, barbels or spines.", 0.1);
-            b.Group("fins", "Fins", GeneStream.Anatomy)
-             .Float("fins.pectoral", "Fins pectoral", 0, 1, 0.5, "", 0.1)
-             .Float("fins.pelvic", "Fins pelvic", 0, 1, 0.35, "", 0.1)
-             .Choice("fins.dorsalShape", "Fins dorsal shape", DorsalShapes, "pointed", "", 0.1)
-             .Float("fins.dorsal", "Fins dorsal", 0, 1, 0.5, "", 0.1)
-             .Float("fins.anal", "Fins anal", 0, 1, 0.3, "", 0.1);
-            b.Group("tail", "Tail", GeneStream.Anatomy)
-             .Float("tail.length", "Tail length", 0, 1, 0.45, "", 0.1)
-             .Choice("tail.shape", "Tail shape", TailShapes, "fan", "", 0.1)
-             .Float("tail.size", "Tail size", 0, 1, 0.5, "", 0.1);
+            b.Group("body", "身体", GeneStream.Anatomy)
+             .Choice("form", "体型", Forms, "reef", "重新随机时以此为比例与特征的模板。", 0.05)
+             .Float("size", "体型", 0, 1, 0.5, "", 0.08)
+             .Float("body.length", "体长", 0, 1, 0.5, "", 0.1)
+             .Float("body.depth", "体深", 0, 1, 0.5, "从鳗鱼般的扁平到深体型的鱼。", 0.1)
+             .Float("body.width", "体宽", 0, 1, 0.45, "从侧扁到圆筒形。", 0.1)
+             .Choice("swim.style", "游动方式", SwimStyles, "tail", "", 0.05);
+            b.Group("head", "头部", GeneStream.Anatomy)
+             .Float("head.size", "头部大小", 0, 1, 0.5, "", 0.1)
+             .Float("head.snout", "口鼻长度", 0, 1, 0.4, "", 0.1)
+             .Float("head.jaw", "下颌", 0, 1, 0.45, "", 0.1)
+             .Choice("head.teeth", "牙齿", TeethKinds, "none", "", 0.1)
+             .Float("head.eyeSize", "眼睛大小", 0, 1, 0.55, "", 0.1)
+             .Choice("head.eyeStyle", "眼睛样式", EyeStyles, "round", "", 0.08)
+             .Choice("head.extra", "额外特征", Extras, "none", "发光诱饵、触须或尖刺。", 0.1);
+            b.Group("fins", "鳍", GeneStream.Anatomy)
+             .Float("fins.pectoral", "胸鳍", 0, 1, 0.5, "", 0.1)
+             .Float("fins.pelvic", "腹鳍", 0, 1, 0.35, "", 0.1)
+             .Choice("fins.dorsalShape", "背鳍形状", DorsalShapes, "pointed", "", 0.1)
+             .Float("fins.dorsal", "背鳍", 0, 1, 0.5, "", 0.1)
+             .Float("fins.anal", "臀鳍", 0, 1, 0.3, "", 0.1);
+            b.Group("tail", "尾巴", GeneStream.Anatomy)
+             .Float("tail.length", "尾长", 0, 1, 0.45, "", 0.1)
+             .Choice("tail.shape", "尾形", TailShapes, "fan", "", 0.1)
+             .Float("tail.size", "尾巴大小", 0, 1, 0.5, "", 0.1);
             SharedGenes.AddColorGenes(b);
             SharedGenes.AddPatternGenes(b, "scales");
             SharedGenes.AddMotionGenes(b);

@@ -94,7 +94,7 @@ namespace PixelCreatures.Core.Export
         public static SpritesheetResult Export(CreatureModel model, CreatureRegistry registry, SpritesheetOptions opt, string imageBaseName,
             CancellationToken cancel = default, IProgress<double>? progress = null)
         {
-            if (60 % opt.Fps != 0) throw new ArgumentException("Fps muss 60 teilen (6, 10, 12, 15, 20, 30, 60).");
+            if (60 % opt.Fps != 0) throw new ArgumentException("Fps 必须能整除 60（6、10、12、15、20、30、60）。");
             var result = new SpritesheetResult();
             var renderer = new CreatureRenderer();
             const int extra = 24;

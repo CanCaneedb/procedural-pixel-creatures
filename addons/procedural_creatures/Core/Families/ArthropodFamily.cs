@@ -13,73 +13,73 @@ namespace PixelCreatures.Core.Families
     public sealed class ArthropodFamily : CreatureFamilyBase
     {
         public override string Id => "arthropod";
-        public override string DisplayName => "Arthropods";
-        public override string Description => "Spiders, beetles, ants, scorpions, crabs and mantises: segmented chitin bodies, four to eight jointed legs, pincers or grasping arms, stinger tails and antennae.";
+        public override string DisplayName => "节肢动物";
+        public override string Description => "蜘蛛、甲虫、蚂蚁、蝎子、蟹与螳螂：分节的甲壳身体、四至八条关节腿、螯肢或捕捉足、尾刺与触角。";
         public override int Order => 40;
 
         private static readonly ArchetypeInfo[] ArchetypeList =
         {
-            new ArchetypeInfo("spider", "Spider", 1.2),
-            new ArchetypeInfo("beetle", "Beetle", 1.1),
-            new ArchetypeInfo("ant", "Ant", 0.9),
-            new ArchetypeInfo("scorpion", "Scorpion", 1.0),
-            new ArchetypeInfo("crab", "Crab", 0.9),
-            new ArchetypeInfo("mantis", "Mantis", 0.8),
+            new ArchetypeInfo("spider", "蜘蛛", 1.2),
+            new ArchetypeInfo("beetle", "甲虫", 1.1),
+            new ArchetypeInfo("ant", "蚂蚁", 0.9),
+            new ArchetypeInfo("scorpion", "蝎子", 1.0),
+            new ArchetypeInfo("crab", "蟹", 0.9),
+            new ArchetypeInfo("mantis", "螳螂", 0.8),
         };
 
         public override IReadOnlyList<ArchetypeInfo> Archetypes => ArchetypeList;
 
         public static readonly (string, string)[] Forms =
         {
-            ("spider", "Spider"), ("beetle", "Beetle"), ("ant", "Ant"), ("scorpion", "Scorpion"), ("crab", "Crab"), ("mantis", "Mantis"),
+            ("spider", "蜘蛛"), ("beetle", "甲虫"), ("ant", "蚂蚁"), ("scorpion", "蝎子"), ("crab", "蟹"), ("mantis", "螳螂"),
         };
-        public static readonly (string, string)[] LegCounts = { ("4", "Four"), ("6", "Six"), ("8", "Eight") };
-        public static readonly (string, string)[] ArmKinds = { ("none", "None"), ("pincers", "Pincers"), ("blades", "Blades") };
-        public static readonly (string, string)[] AbdomenShapes = { ("round", "Round"), ("oval", "Oval"), ("long", "Long"), ("flat", "Flat") };
-        public static readonly (string, string)[] EyeKinds = { ("compound", "Compound"), ("cluster", "Cluster"), ("stalks", "Stalks"), ("bead", "Beady") };
-        public static readonly (string, string)[] MouthKinds = { ("none", "None"), ("mandibles", "Mandibles"), ("fangs", "Fangs") };
-        public static readonly (string, string)[] AntennaKinds = { ("none", "None"), ("short", "Short"), ("long", "Long"), ("clubbed", "Clubbed") };
-        public static readonly (string, string)[] TailKinds = { ("none", "None"), ("stinger", "Stinger"), ("cerci", "Cerci") };
-        public static readonly (string, string)[] HornKinds = { ("none", "None"), ("rhino", "Rhino"), ("stag", "Stag") };
-        public static readonly (string, string)[] ShellKinds = { ("none", "None"), ("elytra", "Elytra"), ("carapace", "Carapace"), ("spiky", "Spiky") };
+        public static readonly (string, string)[] LegCounts = { ("4", "四"), ("6", "六"), ("8", "八") };
+        public static readonly (string, string)[] ArmKinds = { ("none", "无"), ("pincers", "螯肢"), ("blades", "刀臂") };
+        public static readonly (string, string)[] AbdomenShapes = { ("round", "圆"), ("oval", "椭圆"), ("long", "长"), ("flat", "扁") };
+        public static readonly (string, string)[] EyeKinds = { ("compound", "复眼"), ("cluster", "簇眼"), ("stalks", "眼柄"), ("bead", "珠状") };
+        public static readonly (string, string)[] MouthKinds = { ("none", "无"), ("mandibles", "口器"), ("fangs", "獠牙") };
+        public static readonly (string, string)[] AntennaKinds = { ("none", "无"), ("short", "短"), ("long", "长"), ("clubbed", "棒状") };
+        public static readonly (string, string)[] TailKinds = { ("none", "无"), ("stinger", "尾刺"), ("cerci", "尾须") };
+        public static readonly (string, string)[] HornKinds = { ("none", "无"), ("rhino", "犀角"), ("stag", "鹿角") };
+        public static readonly (string, string)[] ShellKinds = { ("none", "无"), ("elytra", "鞘翅"), ("carapace", "背甲"), ("spiky", "刺甲") };
 
         protected override GeneSchema CreateSchema()
         {
             var b = new GeneSchemaBuilder(Id);
-            b.Group("body", "Body", GeneStream.Anatomy)
-             .Choice("form", "Body type", Forms, "spider", "Archetype used as a template for proportions and features when rerolling.", 0.05)
-             .Float("size", "Size", 0, 1, 0.5, "", 0.08)
-             .Float("thorax.size", "Thorax size", 0, 1, 0.5, "", 0.1)
-             .Float("thorax.length", "Thorax length", 0, 1, 0.3, "Elongated prothorax, as in mantises.", 0.1)
-             .Float("abdomen.size", "Abdomen size", 0, 1, 0.6, "", 0.1)
-             .Choice("abdomen.shape", "Abdomen shape", AbdomenShapes, "round", "", 0.1)
-             .Float("abdomen.lift", "Abdomen lift", 0, 1, 0.3, "", 0.1)
-             .Float("waist", "Waist", 0, 1, 0.3, "Narrow waist between thorax and abdomen.", 0.1);
-            b.Group("head", "Head", GeneStream.Anatomy)
-             .Float("head.size", "Head size", 0, 1, 0.45, "", 0.1)
-             .Choice("head.eyes", "Head eyes", EyeKinds, "cluster", "", 0.08)
-             .Float("head.eyeSize", "Head eye size", 0, 1, 0.5, "", 0.1)
-             .Choice("head.mouth", "Head mouth", MouthKinds, "fangs", "", 0.1)
-             .Float("head.mouthSize", "Head mouth size", 0, 1, 0.5, "", 0.1)
-             .Choice("head.antennae", "Head antennae", AntennaKinds, "none", "", 0.1)
-             .Float("head.antennaLength", "Head antenna length", 0, 1, 0.5, "", 0.1)
-             .Choice("head.horn", "Head horn", HornKinds, "none", "", 0.1)
-             .Float("head.hornSize", "Head horn size", 0, 1, 0.5, "", 0.1);
-            b.Group("legs", "Legs", GeneStream.Anatomy)
-             .Choice("legs.count", "Legs count", LegCounts, "8", "", 0.05)
-             .Float("legs.length", "Legs length", 0, 1, 0.55, "", 0.1)
-             .Float("legs.thickness", "Legs thickness", 0, 1, 0.4, "", 0.1)
-             .Float("legs.spread", "Legs spread", 0, 1, 0.55, "", 0.1)
-             .Float("legs.height", "Legs height", 0, 1, 0.45, "Height of the body above the ground.", 0.1);
-            b.Group("arms", "Arms", GeneStream.Anatomy)
-             .Choice("arms.kind", "Arms kind", ArmKinds, "none", "", 0.08)
-             .Float("arms.size", "Arms size", 0, 1, 0.5, "", 0.1)
-             .Float("arms.length", "Arms length", 0, 1, 0.5, "", 0.1);
-            b.Group("tail", "Tail", GeneStream.Anatomy)
-             .Choice("tail.kind", "Tail kind", TailKinds, "none", "", 0.08)
-             .Float("tail.length", "Tail length", 0, 1, 0.6, "", 0.1)
-             .Choice("shell.kind", "Shell kind", ShellKinds, "none", "", 0.1)
-             .Float("shell.size", "Shell size", 0, 1, 0.5, "", 0.1);
+            b.Group("body", "身体", GeneStream.Anatomy)
+             .Choice("form", "体型", Forms, "spider", "重新随机时以此为比例与特征的模板。", 0.05)
+             .Float("size", "体型", 0, 1, 0.5, "", 0.08)
+             .Float("thorax.size", "胸部大小", 0, 1, 0.5, "", 0.1)
+             .Float("thorax.length", "胸部长度", 0, 1, 0.3, "延长的前胸，如螳螂。", 0.1)
+             .Float("abdomen.size", "腹部大小", 0, 1, 0.6, "", 0.1)
+             .Choice("abdomen.shape", "腹部形状", AbdomenShapes, "round", "", 0.1)
+             .Float("abdomen.lift", "腹部抬升", 0, 1, 0.3, "", 0.1)
+             .Float("waist", "腰部", 0, 1, 0.3, "胸部与腹部之间的细腰。", 0.1);
+            b.Group("head", "头部", GeneStream.Anatomy)
+             .Float("head.size", "头部大小", 0, 1, 0.45, "", 0.1)
+             .Choice("head.eyes", "眼睛数量", EyeKinds, "cluster", "", 0.08)
+             .Float("head.eyeSize", "眼睛大小", 0, 1, 0.5, "", 0.1)
+             .Choice("head.mouth", "嘴", MouthKinds, "fangs", "", 0.1)
+             .Float("head.mouthSize", "嘴大小", 0, 1, 0.5, "", 0.1)
+             .Choice("head.antennae", "触角", AntennaKinds, "none", "", 0.1)
+             .Float("head.antennaLength", "触角长度", 0, 1, 0.5, "", 0.1)
+             .Choice("head.horn", "角", HornKinds, "none", "", 0.1)
+             .Float("head.hornSize", "角大小", 0, 1, 0.5, "", 0.1);
+            b.Group("legs", "腿", GeneStream.Anatomy)
+             .Choice("legs.count", "腿数", LegCounts, "8", "", 0.05)
+             .Float("legs.length", "腿长", 0, 1, 0.55, "", 0.1)
+             .Float("legs.thickness", "腿粗", 0, 1, 0.4, "", 0.1)
+             .Float("legs.spread", "腿间距", 0, 1, 0.55, "", 0.1)
+             .Float("legs.height", "腿高", 0, 1, 0.45, "身体离地高度。", 0.1);
+            b.Group("arms", "手臂", GeneStream.Anatomy)
+             .Choice("arms.kind", "手臂类型", ArmKinds, "none", "", 0.08)
+             .Float("arms.size", "手臂大小", 0, 1, 0.5, "", 0.1)
+             .Float("arms.length", "手臂长度", 0, 1, 0.5, "", 0.1);
+            b.Group("tail", "尾巴", GeneStream.Anatomy)
+             .Choice("tail.kind", "尾巴类型", TailKinds, "none", "", 0.08)
+             .Float("tail.length", "尾长", 0, 1, 0.6, "", 0.1)
+             .Choice("shell.kind", "甲壳类型", ShellKinds, "none", "", 0.1)
+             .Float("shell.size", "甲壳大小", 0, 1, 0.5, "", 0.1);
             SharedGenes.AddColorGenes(b);
             SharedGenes.AddPatternGenes(b, "chitin");
             SharedGenes.AddMotionGenes(b);

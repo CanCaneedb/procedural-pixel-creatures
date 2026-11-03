@@ -131,26 +131,26 @@ namespace PixelCreatures.Workshop
         {
             var col = UiKit.Column(5);
             col.CustomMinimumSize = new Vector2(250, 0);
-            col.AddChild(UiKit.Header("Overview"));
-            var intro = UiKit.Label("Generate up to 100 different creatures at once, compare them in motion and inspect each one.", 12, UiKit.TextDim);
+            col.AddChild(UiKit.Header("总览"));
+            var intro = UiKit.Label("一次生成最多 100 个不同的生物，让它们动起来互相比较，并逐个查看细节。", 12, UiKit.TextDim);
             intro.AutowrapMode = TextServer.AutowrapMode.WordSmart;
             intro.CustomMinimumSize = new Vector2(236, 0);
             col.AddChild(intro);
 
-            col.AddChild(UiKit.Label("Source", 13, UiKit.TextDim));
-            _source = new OptionButton { FocusMode = FocusModeEnum.None, TooltipText = "New creatures from seeds, or offspring (mutations) of a parent" };
-            _source.AddItem("New creatures from seeds");
-            _source.AddItem("Offspring of a parent");
+            col.AddChild(UiKit.Label("来源", 13, UiKit.TextDim));
+            _source = new OptionButton { FocusMode = FocusModeEnum.None, TooltipText = "按种子生成新生物，或生成某个亲代的子代（变异）" };
+            _source.AddItem("按种子生成新生物");
+            _source.AddItem("某个亲代的子代");
             _source.ItemSelected += i => { Settings.Source = (SourceKind)(int)i; UpdateSourceUi(); };
             col.AddChild(_source);
 
             // --- random: family and archetype
             _filterBox = UiKit.Column(4);
-            _family = new OptionButton { FocusMode = FocusModeEnum.None, TooltipText = "All families in turn, or just one family" };
-            _family.AddItem("All families");
+            _family = new OptionButton { FocusMode = FocusModeEnum.None, TooltipText = "轮流使用全部类别，或只用一个类别" };
+            _family.AddItem("全部类别");
             foreach (var f in CreatureRuntime.Registry.Families) _family.AddItem(f.DisplayName);
             _family.ItemSelected += _ => { FillArchetypes(); };
-            _archetype = new OptionButton { FocusMode = FocusModeEnum.None, TooltipText = "Only creatures of one archetype (requires a selected family)" };
+            _archetype = new OptionButton { FocusMode = FocusModeEnum.None, TooltipText = "只生成某一原型的生物（需先选定类别）" };
             _filterBox.AddChild(_family);
             _filterBox.AddChild(_archetype);
             col.AddChild(_filterBox);
@@ -158,89 +158,89 @@ namespace PixelCreatures.Workshop
 
             // --- offspring: parent and mutation strength
             _mutationBox = UiKit.Column(4);
-            _parentLabel = UiKit.Label("Parent: –", 12, UiKit.Text);
+            _parentLabel = UiKit.Label("亲代：–", 12, UiKit.Text);
             _parentLabel.ClipText = true;
             _parentLabel.CustomMinimumSize = new Vector2(236, 0);
             _mutationBox.AddChild(_parentLabel);
-            _mutationBox.AddChild(UiKit.Button("Use editor creature as parent", () => SetParent(_main.State.Genome), "The creature from the editor becomes the parent"));
-            _strengthLabel = UiKit.Label("Mutation strength 35%", 12, UiKit.TextDim);
+            _mutationBox.AddChild(UiKit.Button("以编辑器中的生物为亲代", () => SetParent(_main.State.Genome), "编辑器中的生物将成为亲代"));
+            _strengthLabel = UiKit.Label("变异强度 35%", 12, UiKit.TextDim);
             _mutationBox.AddChild(_strengthLabel);
             _strength = new HSlider { MinValue = 0.05, MaxValue = 1, Step = 0.01, Value = 0.35, FocusMode = FocusModeEnum.None };
-            _strength.ValueChanged += v => { Settings.Mutation.Strength = v; _strengthLabel.Text = $"Mutation strength {v * 100:0}%"; };
+            _strength.ValueChanged += v => { Settings.Mutation.Strength = v; _strengthLabel.Text = $"变异强度 {v * 100:0}%"; };
             _mutationBox.AddChild(_strength);
-            _respectLocks = UiKit.Toggle("Respect editor locks", true, _ => { }, "Traits locked in the editor stay the same in all offspring");
+            _respectLocks = UiKit.Toggle("遵循编辑器锁定", true, _ => { }, "在编辑器中锁定的特征在所有子代中保持不变");
             _mutationBox.AddChild(_respectLocks);
             col.AddChild(_mutationBox);
 
             // --- count and seed
-            _countLabel = UiKit.Label("Count 100", 13, UiKit.TextDim);
+            _countLabel = UiKit.Label("数量 100", 13, UiKit.TextDim);
             col.AddChild(_countLabel);
-            _count = new HSlider { MinValue = 1, MaxValue = MaxCreatures, Step = 1, Value = MaxCreatures, FocusMode = FocusModeEnum.None, TooltipText = "How many creatures to generate (1–100)" };
-            _count.ValueChanged += v => { Settings.Count = (int)v; _countLabel.Text = $"Count {(int)v}"; };
+            _count = new HSlider { MinValue = 1, MaxValue = MaxCreatures, Step = 1, Value = MaxCreatures, FocusMode = FocusModeEnum.None, TooltipText = "要生成多少个生物（1–100）" };
+            _count.ValueChanged += v => { Settings.Count = (int)v; _countLabel.Text = $"数量 {(int)v}"; };
             col.AddChild(_count);
             var quick = new HBoxContainer();
             quick.AddThemeConstantOverride("separation", 3);
             foreach (int n in new[] { 9, 25, 50, 100 })
             {
                 int c = n;
-                var b = UiKit.Button($"{n}", () => _count.Value = c, $"{n} creatures");
+                var b = UiKit.Button($"{n}", () => _count.Value = c, $"{n} 个生物");
                 b.SizeFlagsHorizontal = SizeFlags.ExpandFill;
                 quick.AddChild(b);
             }
             col.AddChild(quick);
-            col.AddChild(UiKit.Label("Start seed", 13, UiKit.TextDim));
-            _seed = new LineEdit { PlaceholderText = "Number or text", SizeFlagsHorizontal = SizeFlags.ExpandFill, TooltipText = "Same seed + same settings = same creatures" };
+            col.AddChild(UiKit.Label("起始种子", 13, UiKit.TextDim));
+            _seed = new LineEdit { PlaceholderText = "数字或文本", SizeFlagsHorizontal = SizeFlags.ExpandFill, TooltipText = "相同种子 + 相同设置 = 相同生物" };
             _seed.TextSubmitted += _ => Generate();
-            var dice = new Button { Icon = Icons.Get("dice", 1), FocusMode = FocusModeEnum.None, TooltipText = "Random start seed" };
+            var dice = new Button { Icon = Icons.Get("dice", 1), FocusMode = FocusModeEnum.None, TooltipText = "随机起始种子" };
             dice.Pressed += () => { _seed.Text = RandomSeed().ToString(CultureInfo.InvariantCulture); };
             col.AddChild(UiKit.Row(4, _seed, dice));
 
-            var gen = new Button { Text = "Generate", Icon = Icons.Get("new", 1), FocusMode = FocusModeEnum.None, TooltipText = "Generate creatures with these settings (Enter in the seed field)" };
+            var gen = new Button { Text = "生成", Icon = Icons.Get("new", 1), FocusMode = FocusModeEnum.None, TooltipText = "按当前设置生成生物（在种子输入框中按回车）" };
             gen.Pressed += Generate;
             gen.AddThemeColorOverride("font_color", UiKit.Accent);
-            var next = new Button { Text = "New roll", Icon = Icons.Get("dice", 1), FocusMode = FocusModeEnum.None, TooltipText = "New start seed, generate right away (G)" };
+            var next = new Button { Text = "换种重掷", Icon = Icons.Get("dice", 1), FocusMode = FocusModeEnum.None, TooltipText = "换一个起始种子并立即生成（G）" };
             next.Pressed += NewThrow;
             gen.SizeFlagsHorizontal = SizeFlags.ExpandFill;
             next.SizeFlagsHorizontal = SizeFlags.ExpandFill;
             col.AddChild(UiKit.Row(4, gen, next));
-            var keep = UiKit.Button("Reroll, keep favorites", RerollKeepFavorites, "All creatures without a star are replaced");
+            var keep = UiKit.Button("重掷并保留收藏", RerollKeepFavorites, "所有未标星的生物都会被替换");
             col.AddChild(keep);
-            col.AddChild(UiKit.Button("Save favorites as presets", SaveFavorites, "Saves all marked creatures to user://presets"));
+            col.AddChild(UiKit.Button("把收藏保存为预设", SaveFavorites, "把所有标星的生物保存到 user://presets"));
 
             col.AddChild(UiKit.Separator());
-            col.AddChild(UiKit.Label("Display", 13, UiKit.TextDim));
-            _sort = new OptionButton { FocusMode = FocusModeEnum.None, TooltipText = "Order in the grid" };
-            foreach (var s in new[] { "Order: generation", "Order: family", "Order: archetype", "Order: size", "Order: color", "Order: favorites first" }) _sort.AddItem(s);
+            col.AddChild(UiKit.Label("显示", 13, UiKit.TextDim));
+            _sort = new OptionButton { FocusMode = FocusModeEnum.None, TooltipText = "网格中的排序方式" };
+            foreach (var s in new[] { "排序：生成顺序", "排序：类别", "排序：原型", "排序：体型", "排序：颜色", "排序：收藏优先" }) _sort.AddItem(s);
             _sort.ItemSelected += i => SetSort((SortKind)(int)i);
             col.AddChild(_sort);
-            _bg = new OptionButton { FocusMode = FocusModeEnum.None, SizeFlagsHorizontal = SizeFlags.ExpandFill, TooltipText = "Ground of the cells (aquatic creatures always stand in water)" };
-            foreach (var b in new[] { "Grass", "Meadow", "Dirt", "Sand", "Water", "Neutral", "Dark" }) _bg.AddItem(b);
+            _bg = new OptionButton { FocusMode = FocusModeEnum.None, SizeFlagsHorizontal = SizeFlags.ExpandFill, TooltipText = "格子的地面（水生生物始终站在水中）" };
+            foreach (var b in new[] { "草地", "草甸", "泥土", "沙地", "水面", "中性", "深色" }) _bg.AddItem(b);
             _bg.ItemSelected += i => { Grid.Background = (StageBackground)(int)i; Grid.Relayout(); };
-            var zoomOut = UiKit.Button("-", () => Grid.SetZoom(Math.Max(1, Grid.EffectiveZoom - 1)), "Zoom out (-, Ctrl+mouse wheel)");
-            var zoomAuto = UiKit.Button("Auto", () => Grid.SetZoom(0), "Automatic zoom");
-            var zoomIn = UiKit.Button("+", () => Grid.SetZoom(Math.Min(6, Grid.EffectiveZoom + 1)), "Zoom in (+, Ctrl+mouse wheel)");
+            var zoomOut = UiKit.Button("-", () => Grid.SetZoom(Math.Max(1, Grid.EffectiveZoom - 1)), "缩小（-，Ctrl+滚轮）");
+            var zoomAuto = UiKit.Button("自动", () => Grid.SetZoom(0), "自动缩放");
+            var zoomIn = UiKit.Button("+", () => Grid.SetZoom(Math.Min(6, Grid.EffectiveZoom + 1)), "放大（+，Ctrl+滚轮）");
             col.AddChild(UiKit.Row(4, _bg, zoomOut, zoomAuto, zoomIn));
-            col.AddChild(UiKit.Toggle("Show names", true, on => { Grid.ShowNames = on; Grid.PlaceActors(); }, "Name and archetype below each creature"));
+            col.AddChild(UiKit.Toggle("显示名称", true, on => { Grid.ShowNames = on; Grid.PlaceActors(); }, "在每个生物下方显示名称与原型"));
 
-            col.AddChild(UiKit.Label("Movement of all creatures", 13, UiKit.TextDim));
+            col.AddChild(UiKit.Label("所有生物的动作", 13, UiKit.TextDim));
             var modes = new HBoxContainer();
             modes.AddThemeConstantOverride("separation", 3);
             _modeButtons = new[]
             {
-                UiKit.Button("Stand", () => SetMode(MoveMode.Stand), "All stand (1)"),
-                UiKit.Button("Walk", () => SetMode(MoveMode.Walk), "All walk in place (2)"),
-                UiKit.Button("Run", () => SetMode(MoveMode.Run), "All run in place (3)"),
+                UiKit.Button("站立", () => SetMode(MoveMode.Stand), "全部站立（1）"),
+                UiKit.Button("行走", () => SetMode(MoveMode.Walk), "全部原地行走（2）"),
+                UiKit.Button("奔跑", () => SetMode(MoveMode.Run), "全部原地奔跑（3）"),
             };
             foreach (var b in _modeButtons) { b.ToggleMode = true; b.SizeFlagsHorizontal = SizeFlags.ExpandFill; modes.AddChild(b); }
             col.AddChild(modes);
-            var left = UiKit.Button("⟲", () => SetDirection(Direction + 1), "Turn all 45° to the left (Q)");
-            var right = UiKit.Button("⟳", () => SetDirection(Direction - 1), "Turn all 45° to the right (E)");
-            _dirLabel = UiKit.Label($"Facing {PixelCamera.DirectionLabels[7]}", 12, UiKit.Text);
+            var left = UiKit.Button("←", () => SetDirection(Direction + 1), "整体向左转 45°（Q）");
+            var right = UiKit.Button("→", () => SetDirection(Direction - 1), "整体向右转 45°（E）");
+            _dirLabel = UiKit.Label($"朝向 {PixelCamera.DirectionLabels[7]}", 12, UiKit.Text);
             _dirLabel.SizeFlagsHorizontal = SizeFlags.ExpandFill;
             _dirLabel.HorizontalAlignment = HorizontalAlignment.Center;
             col.AddChild(UiKit.Row(4, left, _dirLabel, right));
-            var actAll = UiKit.Button("Action (all)", ActionAll, "All perform their action, slightly staggered (Shift+Space)");
-            _restButton = UiKit.Toggle("Rest", false, on => SetRestAll(on), "All lie down or get back up (R)");
+            var actAll = UiKit.Button("动作（全部）", ActionAll, "所有生物依次做动作，略有错开（Shift+空格）");
+            _restButton = UiKit.Toggle("休息", false, on => SetRestAll(on), "全部趴下或重新站起（R）");
             actAll.SizeFlagsHorizontal = SizeFlags.ExpandFill;
             col.AddChild(UiKit.Row(4, actAll, _restButton));
 
@@ -248,7 +248,7 @@ namespace PixelCreatures.Workshop
             _status.AutowrapMode = TextServer.AutowrapMode.WordSmart;
             _status.CustomMinimumSize = new Vector2(236, 0);
             col.AddChild(_status);
-            var help = UiKit.Label("Click: select · Double-click/Enter: open in editor · Arrow keys: move selection · F: favorite · Space: action · Mouse wheel: scroll", 11, UiKit.TextDim);
+            var help = UiKit.Label("单击：选中 · 双击/回车：在编辑器中打开 · 方向键：移动选择 · F：收藏 · 空格：动作 · 滚轮：滚动", 11, UiKit.TextDim);
             help.AutowrapMode = TextServer.AutowrapMode.WordSmart;
             help.CustomMinimumSize = new Vector2(236, 0);
             col.AddChild(help);
@@ -263,7 +263,7 @@ namespace PixelCreatures.Workshop
         private void FillArchetypes()
         {
             _archetype.Clear();
-            _archetype.AddItem("All archetypes");
+            _archetype.AddItem("全部原型");
             var fam = SelectedFamily();
             if (fam != null) foreach (var a in fam.Archetypes) _archetype.AddItem(a.Label);
             _archetype.Disabled = fam == null;
@@ -286,7 +286,7 @@ namespace PixelCreatures.Workshop
         {
             Settings.Parent = g;
             string fam = CreatureRuntime.Registry.GetFamily(g.FamilyId).DisplayName;
-            _parentLabel.Text = $"Parent: {(string.IsNullOrEmpty(g.Name) ? "(unnamed)" : g.Name)} ({fam})";
+            _parentLabel.Text = $"亲代：{(string.IsNullOrEmpty(g.Name) ? "（未命名）" : g.Name)}（{fam}）";
             _parentLabel.TooltipText = _parentLabel.Text;
             if (select)
             {
@@ -301,8 +301,8 @@ namespace PixelCreatures.Workshop
         {
             var col = UiKit.Column(5);
             col.CustomMinimumSize = new Vector2(300, 0);
-            col.AddChild(UiKit.Header("Inspector"));
-            _inspEmpty = UiKit.Label("Click a creature in the grid.", 13, UiKit.TextDim);
+            col.AddChild(UiKit.Header("检查器"));
+            _inspEmpty = UiKit.Label("在网格中单击一个生物。", 13, UiKit.TextDim);
             col.AddChild(_inspEmpty);
             _inspBody = UiKit.Column(5);
             _inspBody.SizeFlagsVertical = SizeFlags.ExpandFill;
@@ -324,19 +324,19 @@ namespace PixelCreatures.Workshop
             modes.AddThemeConstantOverride("separation", 3);
             _inspModeButtons = new[]
             {
-                UiKit.Button("Stand", () => SetInspectorMode(MoveMode.Stand)),
-                UiKit.Button("Walk", () => SetInspectorMode(MoveMode.Walk)),
-                UiKit.Button("Run", () => SetInspectorMode(MoveMode.Run)),
+                UiKit.Button("站立", () => SetInspectorMode(MoveMode.Stand)),
+                UiKit.Button("行走", () => SetInspectorMode(MoveMode.Walk)),
+                UiKit.Button("奔跑", () => SetInspectorMode(MoveMode.Run)),
             };
             foreach (var b in _inspModeButtons) { b.ToggleMode = true; b.SizeFlagsHorizontal = SizeFlags.ExpandFill; modes.AddChild(b); }
             _inspBody.AddChild(modes);
             var acts = new HBoxContainer();
             acts.AddThemeConstantOverride("separation", 3);
-            var action = UiKit.Button("Action", () => InspectorActor.TriggerAction(), "Action of the selected creature (Space)");
-            var hit = UiKit.Button("Hit", () => InspectorActor.TriggerHit(AnimationPanel.DirVector(_inspDir), 1f));
-            var rest = UiKit.Toggle("Rest", false, on => InspectorActor.Resting = on);
-            var turnL = UiKit.Button("⟲", () => SetInspectorDirection(_inspDir + 1), "Turn left");
-            var turnR = UiKit.Button("⟳", () => SetInspectorDirection(_inspDir - 1), "Turn right");
+            var action = UiKit.Button("动作", () => InspectorActor.TriggerAction(), "选中生物的动作（空格）");
+            var hit = UiKit.Button("受击", () => InspectorActor.TriggerHit(AnimationPanel.DirVector(_inspDir), 1f));
+            var rest = UiKit.Toggle("休息", false, on => InspectorActor.Resting = on);
+            var turnL = UiKit.Button("←", () => SetInspectorDirection(_inspDir + 1), "向左转");
+            var turnR = UiKit.Button("→", () => SetInspectorDirection(_inspDir - 1), "向右转");
             foreach (var b in new[] { action, hit, rest }) b.SizeFlagsHorizontal = SizeFlags.ExpandFill;
             foreach (var b in new Control[] { action, hit, rest, turnL, turnR }) acts.AddChild(b);
             _inspBody.AddChild(acts);
@@ -351,15 +351,15 @@ namespace PixelCreatures.Workshop
             infoScroll.AddChild(_inspInfo);
             _inspBody.AddChild(infoScroll);
 
-            var open = new Button { Text = "Open in editor", Icon = Icons.Get("load", 1), FocusMode = FocusModeEnum.None, TooltipText = "Load the creature into the editor (Enter, double-click)" };
+            var open = new Button { Text = "在编辑器中打开", Icon = Icons.Get("load", 1), FocusMode = FocusModeEnum.None, TooltipText = "把该生物载入编辑器（回车、双击）" };
             open.Pressed += OpenInEditor;
             open.AddThemeColorOverride("font_color", UiKit.Accent);
             open.SizeFlagsHorizontal = SizeFlags.ExpandFill;
-            _favButton = UiKit.Toggle("★ Favorite", false, on => { if (_selected != null) { _selected.Favorite = on; UpdateStatus(); } }, "Mark (F); favorites are kept when rerolling");
+            _favButton = UiKit.Toggle("★ 收藏", false, on => { if (_selected != null) { _selected.Favorite = on; UpdateStatus(); } }, "标记（F）；重掷时收藏会保留");
             _inspBody.AddChild(UiKit.Row(4, open, _favButton));
-            var save = UiKit.Button("Save", SaveSelected, "Save as a preset to user://presets");
-            var reroll = UiKit.Button("Replace", RerollSelected, "Replace only this creature with a new one");
-            var offspring = UiKit.Button("Offspring of this", () => { if (_selected != null) { SetParent(_selected.Genome); Generate(); } }, "Generates offspring of this creature in the grid");
+            var save = UiKit.Button("保存", SaveSelected, "保存为预设到 user://presets");
+            var reroll = UiKit.Button("替换", RerollSelected, "只把这个生物换成新的");
+            var offspring = UiKit.Button("它的子代", () => { if (_selected != null) { SetParent(_selected.Genome); Generate(); } }, "在网格中生成这个生物的子代");
             foreach (var b in new[] { save, reroll, offspring }) b.SizeFlagsHorizontal = SizeFlags.ExpandFill;
             _inspBody.AddChild(UiKit.Row(3, save, reroll, offspring));
             _inspBody.Visible = false;
@@ -412,10 +412,10 @@ namespace PixelCreatures.Workshop
             _inspEmpty.Visible = e == null;
             if (e == null) return;
             var g = e.Genome;
-            _inspTitle.Text = string.IsNullOrEmpty(g.Name) ? "(unnamed)" : g.Name;
+            _inspTitle.Text = string.IsNullOrEmpty(g.Name) ? "（未命名）" : g.Name;
             _inspSub.Text = Settings.Source == SourceKind.Offspring && g.Lineage.Generation > 0
-                ? $"{e.ArchetypeLabel} · {e.FamilyLabel} · Offspring (generation {g.Lineage.Generation})"
-                : $"{e.ArchetypeLabel} · {e.FamilyLabel} · Seed {e.Seed}";
+                ? $"{e.ArchetypeLabel} · {e.FamilyLabel} · 子代（第 {g.Lineage.Generation} 代）"
+                : $"{e.ArchetypeLabel} · {e.FamilyLabel} · 种子 {e.Seed}";
             _favButton.SetPressedNoSignal(e.Favorite);
             if (InspectorActor.Model != e.Model) InspectorActor.ApplyModel(e.Model);
             _inspStage.Background = e.Aquatic ? StageBackground.Water : (Grid.Background == StageBackground.Water ? StageBackground.Grass : Grid.Background);
@@ -429,14 +429,14 @@ namespace PixelCreatures.Workshop
 
             var a = e.Model.Anatomy;
             var sb = new StringBuilder();
-            sb.Append($"[color=#e2ac4c]Traits[/color] {string.Join(", ", a.Traits)}\n");
-            sb.Append(string.Format(CultureInfo.InvariantCulture, "Body length {0:0} px · leg length {1:0} px · walk {2:0} px/s · run {3:0} px/s\n",
+            sb.Append($"[color=#e2ac4c]特征[/color] {string.Join("、", a.Traits.Select(t => TraitLabels.Label(g, t)))}\n");
+            sb.Append(string.Format(CultureInfo.InvariantCulture, "体长 {0:0} px · 腿长 {1:0} px · 行走 {2:0} px/s · 奔跑 {3:0} px/s\n",
                 a.Metrics.BodyLength, a.Metrics.LegLength, e.Model.Motion.WalkSpeed, e.Model.Motion.RunSpeed));
-            sb.Append($"Parts: {a.Primitives.Count} primitives in {a.Groups.Count} groups, {a.Skeleton.Count} bones · canvas {a.Canvas.Width}×{a.Canvas.Height}\n");
-            sb.Append($"Palette: {pal.Colors.Count - CreaturePalette.FirstColorIndex} colors · content ID {g.ContentId}\n");
+            sb.Append($"部件：{a.Primitives.Count} 个图元，分属 {a.Groups.Count} 个分组，{a.Skeleton.Count} 根骨骼 · 画布 {a.Canvas.Width}×{a.Canvas.Height}\n");
+            sb.Append($"调色板：{pal.Colors.Count - CreaturePalette.FirstColorIndex} 种颜色 · 内容 ID {g.ContentId}\n");
             if (g.Lineage.Generation == 0)
-                sb.Append($"[color=#969aa0]Same creature in the editor: family “{e.FamilyLabel}”, seed {e.Seed}[/color]\n");
-            sb.Append("\n[color=#e2ac4c]Genes[/color]\n");
+                sb.Append($"[color=#969aa0]在编辑器中的同一个生物：类别“{e.FamilyLabel}”，种子 {e.Seed}[/color]\n");
+            sb.Append("\n[color=#e2ac4c]基因[/color]\n");
             foreach (var group in g.Schema.Groups)
             {
                 var parts = new List<string>();
@@ -448,7 +448,7 @@ namespace PixelCreatures.Workshop
                     if (d.Kind == GeneKind.Bool) { if (v >= 0.5) parts.Add(d.Label); }
                     else parts.Add($"{d.Label} {d.FormatValue(v)}");
                 }
-                if (parts.Count > 0) sb.Append($"[color=#969aa0]{group.Label}:[/color] {string.Join(" · ", parts)}\n");
+                if (parts.Count > 0) sb.Append($"[color=#969aa0]{group.Label}：[/color] {string.Join(" · ", parts)}\n");
             }
             _inspInfo.Text = sb.ToString();
         }
@@ -499,7 +499,7 @@ namespace PixelCreatures.Workshop
             if (_seed == null) return;
             _seed.Text = s.Seed.ToString(CultureInfo.InvariantCulture);
             _count.SetValueNoSignal(s.Count);
-            _countLabel.Text = $"Count {s.Count}";
+            _countLabel.Text = $"数量 {s.Count}";
             Settings.Source = s.Source;
             Settings.Parent = s.Parent ?? Settings.Parent;
             if (s.Parent != null) SetParent(s.Parent, select: false);
@@ -565,7 +565,7 @@ namespace PixelCreatures.Workshop
             if (s.Source == SourceKind.Offspring && s.Parent != null)
             {
                 var parent = s.Parent;
-                string baseName = string.IsNullOrEmpty(parent.Name) ? "Child" : parent.Name;
+                string baseName = string.IsNullOrEmpty(parent.Name) ? "子代" : parent.Name;
                 for (int i = 0; i < count; i++)
                 {
                     token.ThrowIfCancellationRequested();
@@ -743,14 +743,14 @@ namespace PixelCreatures.Workshop
         {
             if (i < 0 || i >= _order.Count) { UpdateStatus(); return; }
             var e = _order[i];
-            _main.Status($"{e.Genome.Name} · {e.ArchetypeLabel} · {e.FamilyLabel} · Seed {e.Seed}{(e.Favorite ? " · ★" : "")}", UiKit.TextDim);
+            _main.Status($"{e.Genome.Name} · {e.ArchetypeLabel} · {e.FamilyLabel} · 种子 {e.Seed}{(e.Favorite ? " · ★" : "")}", UiKit.TextDim);
         }
 
         public void OpenInEditor()
         {
             if (_selected == null) return;
             var g = _selected.Genome;
-            _main.LoadGenome(g, $"Loaded from the overview: {g.Name}");
+            _main.LoadGenome(g, $"从总览载入：{g.Name}");
             _main.ShowOverview(false);
         }
 
@@ -767,7 +767,7 @@ namespace PixelCreatures.Workshop
         {
             if (_selected == null) return;
             string path = SavePresetUnique(_selected.Genome);
-            _main.Status(path.StartsWith("Error", StringComparison.Ordinal) ? path : $"Saved: {path}", path.StartsWith("Error", StringComparison.Ordinal) ? UiKit.Bad : UiKit.Good);
+            _main.Status(path.StartsWith("错误", StringComparison.Ordinal) ? path : $"已保存：{path}", path.StartsWith("错误", StringComparison.Ordinal) ? UiKit.Bad : UiKit.Good);
         }
 
         private void SaveFavorites()
@@ -776,9 +776,9 @@ namespace PixelCreatures.Workshop
             foreach (var e in _entries.Where(e => e.Favorite))
             {
                 string p = SavePresetUnique(e.Genome);
-                if (!p.StartsWith("Error", StringComparison.Ordinal)) n++;
+                if (!p.StartsWith("错误", StringComparison.Ordinal)) n++;
             }
-            _main.Status(n == 0 ? "No favorites marked (F or ★ in the inspector)." : $"{n} {(n == 1 ? "favorite" : "favorites")} saved to user://presets.", n == 0 ? UiKit.Info : UiKit.Good);
+            _main.Status(n == 0 ? "还没有标记收藏（在检查器中按 F 或点 ★）。" : $"已把 {n} 个收藏保存到 user://presets。", n == 0 ? UiKit.Info : UiKit.Good);
         }
 
         private static string SavePresetUnique(CreatureGenome g)
@@ -788,7 +788,7 @@ namespace PixelCreatures.Workshop
             string path = $"user://presets/{baseName}.json";
             for (int k = 2; FileAccess.FileExists(path) && k < 1000; k++) path = $"user://presets/{baseName}_{k}.json";
             var err = CreatureRuntime.SavePreset(path, g);
-            return err != null ? "Error: " + err : path;
+            return err != null ? "错误：" + err : path;
         }
 
         private void RerollSelected()
@@ -821,7 +821,7 @@ namespace PixelCreatures.Workshop
             }
             Grid.PlaceActors();
             ShowInspector(e);
-            _main.Status($"Replaced with {g.Name} ({e.ArchetypeLabel}).", UiKit.TextDim);
+            _main.Status($"已替换为 {g.Name}（{e.ArchetypeLabel}）。", UiKit.TextDim);
         }
 
         // ------------------------------------------------------------------ movement of all creatures
@@ -842,7 +842,7 @@ namespace PixelCreatures.Workshop
         public void SetDirection(int dir)
         {
             Direction = ((dir % 8) + 8) % 8;
-            if (_dirLabel != null) _dirLabel.Text = $"Facing {PixelCamera.DirectionLabels[Direction]}";
+            if (_dirLabel != null) _dirLabel.Text = $"朝向 {PixelCamera.DirectionLabels[Direction]}";
             foreach (var e in _entries) ApplyMovement(e);
         }
 
@@ -884,7 +884,7 @@ namespace PixelCreatures.Workshop
                     LastGenerationMs = _jobWatch.Elapsed.TotalMilliseconds;
                     ApplyGenerated(job.Result);
                 }
-                else if (job.IsFaulted) _main.Status("Generation failed: " + job.Exception?.GetBaseException().Message, UiKit.Bad);
+                else if (job.IsFaulted) _main.Status("生成失败：" + job.Exception?.GetBaseException().Message, UiKit.Bad);
             }
             if (_pendingActors.Count > 0) CreateActors(6.0);
             for (int i = _staggered.Count - 1; i >= 0; i--)
@@ -907,15 +907,15 @@ namespace PixelCreatures.Workshop
         private void UpdateStatus()
         {
             if (_status == null) return;
-            if (_job != null) { _status.Text = "Generating creatures…"; return; }
+            if (_job != null) { _status.Text = "正在生成生物…"; return; }
             int n = _entries.Count;
-            if (n == 0) { _status.Text = "No creatures generated yet."; return; }
+            if (n == 0) { _status.Text = "尚未生成任何生物。"; return; }
             int fams = _entries.Select(e => e.Family).Distinct().Count();
             int archs = _entries.Select(e => e.Family + "/" + e.Archetype).Distinct().Count();
             int favs = _entries.Count(e => e.Favorite);
             int built = n - _pendingActors.Count;
-            _status.Text = $"{n} {(n == 1 ? "creature" : "creatures")} · {fams} {(fams == 1 ? "family" : "families")} · {archs} {(archs == 1 ? "archetype" : "archetypes")}{(favs > 0 ? $" · {favs} ★" : "")}\n" +
-                           $"{(built < n ? $"appearing… {built}/{n} · " : "")}visible {Grid.VisibleCount()} · generated in {LastGenerationMs:0} ms · zoom {Grid.EffectiveZoom}x";
+            _status.Text = $"{n} 个生物 · {fams} 个类别 · {archs} 种原型{(favs > 0 ? $" · {favs} ★" : "")}\n" +
+                           $"{(built < n ? $"正在出现… {built}/{n} · " : "")}可见 {Grid.VisibleCount()} 个 · 生成耗时 {LastGenerationMs:0} ms · 缩放 {Grid.EffectiveZoom}×";
         }
 
         public override void _UnhandledKeyInput(InputEvent e)

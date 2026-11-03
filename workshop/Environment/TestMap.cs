@@ -30,11 +30,11 @@ namespace PixelCreatures.Workshop
 
         public static readonly MapSize[] All =
         {
-            new MapSize("Small", 640, 400),
-            new MapSize("Medium", 960, 600),
-            new MapSize("Large", 1280, 800),
-            new MapSize("Very large", 1920, 1200),
-            new MapSize("Huge", 2560, 1600),
+            new MapSize("小", 640, 400),
+            new MapSize("中", 960, 600),
+            new MapSize("大", 1280, 800),
+            new MapSize("很大", 1920, 1200),
+            new MapSize("超大", 2560, 1600),
         };
     }
 

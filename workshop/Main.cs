@@ -123,7 +123,7 @@ namespace PixelCreatures.Workshop
 
             // status bar
             var status = new HBoxContainer();
-            _statusText = UiKit.Label("Ready.", 13, UiKit.TextDim);
+            _statusText = UiKit.Label("就绪。", 13, UiKit.TextDim);
             _statusText.SizeFlagsHorizontal = SizeFlags.ExpandFill;
             _statusText.ClipText = true;
             _perf = UiKit.Label("", 12, UiKit.TextDim);
@@ -168,9 +168,9 @@ namespace PixelCreatures.Workshop
                 _info.Refresh();
                 if (PreviewActor.Model != null && PreviewActor.Model.Warnings.Count > 0) Status(string.Join(" | ", PreviewActor.Model.Warnings), UiKit.Info);
             };
-            PreviewActor.BuildFailed += msg => Status("Error: " + msg, UiKit.Bad);
+            PreviewActor.BuildFailed += msg => Status("错误：" + msg, UiKit.Bad);
             PreviewActor.SetGenome(State.Genome, async: false);
-            OnGenomeChanged("Start");
+            OnGenomeChanged("起始");
             Overview.Bind(this);
             Overview.SetActive(false);
         }
@@ -188,7 +188,7 @@ namespace PixelCreatures.Workshop
             _viewEditor.SetPressedNoSignal(!on);
             _viewOverview.SetPressedNoSignal(on);
             if (on && !Overview.HasGenerated) Overview.Generate();
-            Status(on ? "Overview: click to select, double-click to open in the editor." : "Editor.", UiKit.TextDim);
+            Status(on ? "总览：单击选中，双击在编辑器中打开。" : "编辑器。", UiKit.TextDim);
         }
 
         public CreatureActor CreateActor()
@@ -206,11 +206,11 @@ namespace PixelCreatures.Workshop
         {
             var bar = new HBoxContainer();
             bar.AddThemeConstantOverride("separation", 6);
-            _title = UiKit.Label("Procedural Pixel Creature Workshop", 18, UiKit.Accent);
+            _title = UiKit.Label("程序化像素生物工坊", 18, UiKit.Accent);
             bar.AddChild(_title);
             bar.AddChild(UiKit.Spacer(8));
-            _viewEditor = UiKit.Toggle("Editor", true, _ => ShowOverview(false), "Edit one creature (F2 switches the view)");
-            _viewOverview = UiKit.Toggle("Overview", false, _ => ShowOverview(true), "Generate and inspect up to 100 creatures at once (F2 switches the view)");
+            _viewEditor = UiKit.Toggle("编辑器", true, _ => ShowOverview(false), "编辑单个生物（F2 切换视图）");
+            _viewOverview = UiKit.Toggle("总览", false, _ => ShowOverview(true), "一次生成并查看最多 100 个生物（F2 切换视图）");
             bar.AddChild(_viewEditor);
             bar.AddChild(_viewOverview);
             bar.AddChild(UiKit.Spacer(8));
@@ -218,38 +218,38 @@ namespace PixelCreatures.Workshop
             tools.AddThemeConstantOverride("separation", 6);
             _editorTools = tools;
             bar.AddChild(tools);
-            _family = new OptionButton { FocusMode = FocusModeEnum.None, TooltipText = "Body-plan family", CustomMinimumSize = new Vector2(190, 0) };
+            _family = new OptionButton { FocusMode = FocusModeEnum.None, TooltipText = "体型类别", CustomMinimumSize = new Vector2(190, 0) };
             foreach (var f in _families) _family.AddItem(f.DisplayName);
             tools.AddChild(_family);
-            tools.AddChild(UiKit.Label("Seed", 13, UiKit.TextDim));
-            _seed = new LineEdit { CustomMinimumSize = new Vector2(150, 0), PlaceholderText = "Number or text", TooltipText = "Seed: a number or any text. Same seed + family = same creature." };
+            tools.AddChild(UiKit.Label("种子", 13, UiKit.TextDim));
+            _seed = new LineEdit { CustomMinimumSize = new Vector2(150, 0), PlaceholderText = "数字或文本", TooltipText = "种子：数字或任意文本。相同种子 + 相同类别 = 相同生物。" };
             _seed.TextSubmitted += _ => NewFromSeedField();
             tools.AddChild(_seed);
-            var create = new Button { Text = "New creature", Icon = Icons.Get("new", 1), FocusMode = FocusModeEnum.None, TooltipText = "New creature from family and seed (locked traits are kept)" };
+            var create = new Button { Text = "新建生物", Icon = Icons.Get("new", 1), FocusMode = FocusModeEnum.None, TooltipText = "按类别与种子新建生物（已锁定的特征会保留）" };
             create.Pressed += NewFromSeedField;
             tools.AddChild(create);
-            var dice = new Button { Text = "Roll", Icon = Icons.Get("dice", 1), FocusMode = FocusModeEnum.None, TooltipText = "New random seed: regenerate all unlocked traits (F5)" };
+            var dice = new Button { Text = "重掷", Icon = Icons.Get("dice", 1), FocusMode = FocusModeEnum.None, TooltipText = "新的随机种子：重新生成全部未锁定的特征（F5）" };
             dice.Pressed += Reroll;
             tools.AddChild(dice);
             tools.AddChild(new VSeparator());
-            _undo = new Button { Icon = Icons.Get("undo", 1), FocusMode = FocusModeEnum.None, TooltipText = "Undo (Ctrl+Z)" };
+            _undo = new Button { Icon = Icons.Get("undo", 1), FocusMode = FocusModeEnum.None, TooltipText = "撤销（Ctrl+Z）" };
             _undo.Pressed += () => State.Undo();
-            _redo = new Button { Icon = Icons.Get("redo", 1), FocusMode = FocusModeEnum.None, TooltipText = "Redo (Ctrl+Y)" };
+            _redo = new Button { Icon = Icons.Get("redo", 1), FocusMode = FocusModeEnum.None, TooltipText = "重做（Ctrl+Y）" };
             _redo.Pressed += () => State.Redo();
             tools.AddChild(_undo);
             tools.AddChild(_redo);
             tools.AddChild(new VSeparator());
-            var load = new Button { Text = "Load", Icon = Icons.Get("load", 1), FocusMode = FocusModeEnum.None, TooltipText = "Load preset (JSON) (Ctrl+O)" };
+            var load = new Button { Text = "载入", Icon = Icons.Get("load", 1), FocusMode = FocusModeEnum.None, TooltipText = "载入预设（JSON）（Ctrl+O）" };
             load.Pressed += () => OpenDialog(false);
-            var save = new Button { Text = "Save", Icon = Icons.Get("save", 1), FocusMode = FocusModeEnum.None, TooltipText = "Save preset (JSON) (Ctrl+S)" };
+            var save = new Button { Text = "保存", Icon = Icons.Get("save", 1), FocusMode = FocusModeEnum.None, TooltipText = "保存预设（JSON）（Ctrl+S）" };
             save.Pressed += () => OpenDialog(true);
-            _reset = new Button { Text = "Reset", Icon = Icons.Get("reset", 1), FocusMode = FocusModeEnum.None, TooltipText = "Reset to the last saved/loaded state" };
+            _reset = new Button { Text = "重置", Icon = Icons.Get("reset", 1), FocusMode = FocusModeEnum.None, TooltipText = "重置为上次保存或载入的状态" };
             _reset.Pressed += () => State.ResetToSaved();
             tools.AddChild(load);
             tools.AddChild(save);
             tools.AddChild(_reset);
             bar.AddChild(UiKit.Spacer(0, 0, true));
-            var test = new Button { Text = "Test area", FocusMode = FocusModeEnum.None, TooltipText = "Walkable test area with a controllable creature and other creatures" };
+            var test = new Button { Text = "试验场地", FocusMode = FocusModeEnum.None, TooltipText = "可行走的试验场地，内含可操控生物与其他生物" };
             test.Pressed += OpenTestArea;
             bar.AddChild(test);
             return bar;
@@ -280,13 +280,13 @@ namespace PixelCreatures.Workshop
             PreviewActor.SetGenome(g, async: true);
             _undo.Disabled = !State.History.CanUndo;
             _redo.Disabled = !State.History.CanRedo;
-            _undo.TooltipText = State.History.CanUndo ? $"Undo: {State.History.UndoLabel} (Ctrl+Z)" : "Undo (Ctrl+Z)";
-            _redo.TooltipText = State.History.CanRedo ? $"Redo: {State.History.RedoLabel} (Ctrl+Y)" : "Redo (Ctrl+Y)";
+            _undo.TooltipText = State.History.CanUndo ? $"撤销：{State.History.UndoLabel}（Ctrl+Z）" : "撤销（Ctrl+Z）";
+            _redo.TooltipText = State.History.CanRedo ? $"重做：{State.History.RedoLabel}（Ctrl+Y）" : "重做（Ctrl+Y）";
             _reset.Disabled = !State.IsDirty;
-            string name = string.IsNullOrEmpty(g.Name) ? "(unnamed)" : g.Name;
+            string name = string.IsNullOrEmpty(g.Name) ? "（未命名）" : g.Name;
             string fam = CreatureRuntime.Registry.GetFamily(g.FamilyId).DisplayName;
-            DisplayServer.WindowSetTitle($"{name} – {fam}{(State.IsDirty ? " *" : "")} – Procedural Pixel Creature Workshop");
-            if (reason != "Start") Status(reason, UiKit.TextDim);
+            DisplayServer.WindowSetTitle($"{name} – {fam}{(State.IsDirty ? " *" : "")} – 程序化像素生物工坊");
+            if (reason != "起始") Status(reason, UiKit.TextDim);
             _offspring?.ParentChanged();
             _breeding?.ParentChanged();
             _info?.Refresh();
@@ -333,9 +333,9 @@ namespace PixelCreatures.Workshop
             {
                 Access = FileDialog.AccessEnum.Userdata,
                 FileMode = save ? FileDialog.FileModeEnum.SaveFile : FileDialog.FileModeEnum.OpenFile,
-                Filters = new[] { "*.json ; Creature presets" },
+                Filters = new[] { "*.json ; 生物预设" },
                 CurrentDir = "user://presets",
-                Title = save ? "Save preset" : "Load preset",
+                Title = save ? "保存预设" : "载入预设",
                 Size = new Vector2I(760, 520),
                 UseNativeDialog = false,
             };
@@ -355,7 +355,7 @@ namespace PixelCreatures.Workshop
             var err = CreatureRuntime.SavePreset(path, State.Genome);
             if (err != null) { Status(err, UiKit.Bad); return; }
             State.MarkSaved(path);
-            Status($"Saved: {path}", UiKit.Good);
+            Status($"已保存：{path}", UiKit.Good);
         }
 
         public void LoadPreset(string path)
@@ -363,10 +363,10 @@ namespace PixelCreatures.Workshop
             var res = CreatureRuntime.LoadPreset(path);
             if (!res.Ok)
             {
-                Status($"Loading failed: {res.Describe()}", UiKit.Bad);
+                Status($"载入失败：{res.Describe()}", UiKit.Bad);
                 return;
             }
-            State.Load(res.Genome!, path, $"Loaded: {path.GetFile()}");
+            State.Load(res.Genome!, path, $"已载入：{path.GetFile()}");
             if (res.Warnings.Count > 0 || res.Migrations.Count > 0) Status(res.Describe(), UiKit.Info);
         }
 
@@ -418,7 +418,7 @@ namespace PixelCreatures.Workshop
                 _statusTimer -= delta;
                 if (_statusTimer <= 0) _statusText.AddThemeColorOverride("font_color", UiKit.TextDim);
             }
-            _perf.Text = $"{Engine.GetFramesPerSecond():0} FPS | Raster {CreatureRenderQueue.LastRasterMs:0.00} ms ({CreatureRenderQueue.LastBatchSize}) | Upload {CreatureRenderQueue.LastUploadMs:0.00} ms";
+            _perf.Text = $"{Engine.GetFramesPerSecond():0} FPS | 光栅化 {CreatureRenderQueue.LastRasterMs:0.00} ms（{CreatureRenderQueue.LastBatchSize}）| 上传 {CreatureRenderQueue.LastUploadMs:0.00} ms";
         }
 
     }

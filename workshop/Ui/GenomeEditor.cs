@@ -54,7 +54,7 @@ namespace PixelCreatures.Workshop
                 var title = UiKit.Label(group.Label, 15, UiKit.Accent);
                 title.SizeFlagsHorizontal = SizeFlags.ExpandFill;
                 string gid = group.Id;
-                var glock = new Button { Icon = Icons.Get("unlock", 1, UiKit.TextDim), ToggleMode = true, Flat = true, FocusMode = FocusModeEnum.None, TooltipText = $"Lock group “{group.Label}”: it is kept when rerolling and mutating." };
+                var glock = new Button { Icon = Icons.Get("unlock", 1, UiKit.TextDim), ToggleMode = true, Flat = true, FocusMode = FocusModeEnum.None, TooltipText = $"锁定分组“{group.Label}”：重掷与变异时保持不变。" };
                 glock.Toggled += on => { if (!_updating) _state.SetLock(null, gid, on); };
                 _groupLocks[gid] = glock;
                 header.AddChild(fold);
@@ -75,7 +75,17 @@ namespace PixelCreatures.Workshop
                 {
                     _swatches = new HBoxContainer();
                     _swatches.AddThemeConstantOverride("separation", 1);
-                    body.AddChild(_swatches);
+                    // The palette strip holds one swatch per colour, so its natural width changes with every
+                    // creature family and would otherwise resize the whole editor column. Keeping it
+                    // scrollable stops the strip from dictating the column width.
+                    var swatchScroll = new ScrollContainer
+                    {
+                        VerticalScrollMode = ScrollContainer.ScrollMode.Disabled,
+                        SizeFlagsHorizontal = SizeFlags.ExpandFill,
+                        CustomMinimumSize = new Vector2(0, 16),
+                    };
+                    swatchScroll.AddChild(_swatches);
+                    body.AddChild(swatchScroll);
                 }
                 foreach (var gene in schema.GenesInGroup(gid)) body.AddChild(GeneRow(gene));
                 _content.AddChild(body);
@@ -86,10 +96,10 @@ namespace PixelCreatures.Workshop
 
         private static string StreamLabel(GeneStream s) => s switch
         {
-            GeneStream.Anatomy => "Anatomy",
-            GeneStream.Color => "Color",
-            GeneStream.Pattern => "Pattern",
-            _ => "Motion",
+            GeneStream.Anatomy => "结构",
+            GeneStream.Color => "颜色",
+            GeneStream.Pattern => "花纹",
+            _ => "动作",
         };
 
         private Control GeneRow(GeneDef gene)
@@ -98,7 +108,7 @@ namespace PixelCreatures.Workshop
             row.AddThemeConstantOverride("separation", 4);
             var label = UiKit.Label(gene.Label, 13);
             label.CustomMinimumSize = new Vector2(132, 0);
-            label.TooltipText = string.IsNullOrEmpty(gene.Description) ? gene.Id : gene.Description + $"\n({gene.Id})";
+            label.TooltipText = string.IsNullOrEmpty(gene.Description) ? gene.Id : gene.Description + $"\n（{gene.Id}）";
             label.MouseFilter = MouseFilterEnum.Pass;
             label.ClipText = true;
             row.AddChild(label);
@@ -156,7 +166,7 @@ namespace PixelCreatures.Workshop
                     break;
                 }
             }
-            var lk = new Button { Icon = Icons.Get("unlock", 1, UiKit.Line), ToggleMode = true, Flat = true, FocusMode = FocusModeEnum.None, CustomMinimumSize = new Vector2(20, 0), TooltipText = "Lock this trait" };
+            var lk = new Button { Icon = Icons.Get("unlock", 1, UiKit.Line), ToggleMode = true, Flat = true, FocusMode = FocusModeEnum.None, CustomMinimumSize = new Vector2(20, 0), TooltipText = "锁定该特征" };
             lk.Toggled += on => { if (!_updating) _state.SetLock(id, null, on); };
             _geneLocks[id] = lk;
             row.AddChild(lk);

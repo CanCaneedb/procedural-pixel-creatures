@@ -13,101 +13,101 @@ namespace PixelCreatures.Core.Families
     public sealed class BipedFamily : CreatureFamilyBase
     {
         public override string Id => "biped";
-        public override string DisplayName => "Bipeds & Humanoids";
-        public override string Description => "Upright creatures on two legs: goblins, trolls, golems, ogres, imps, kobolds, yetis, orcs and dwarves. Articulated torsos, expressive faces, arms, hands and optional procedural equipment.";
+        public override string DisplayName => "双足与类人";
+        public override string Description => "用两条腿直立行走的生物：哥布林、巨魔、魔像、食人魔、小恶魔、狗头人、雪人、兽人和矮人。具有分节的躯干、富有表现力的面部、手臂、手部，以及可选程序生成的装备。";
         public override int Order => 20;
 
         private static readonly ArchetypeInfo[] ArchetypeList =
         {
-            new ArchetypeInfo("goblin", "Goblin", 1.3),
-            new ArchetypeInfo("troll", "Troll", 1.0),
-            new ArchetypeInfo("golem", "Golem", 0.9),
-            new ArchetypeInfo("ogre", "Ogre", 0.9),
-            new ArchetypeInfo("imp", "Imp", 0.9),
-            new ArchetypeInfo("kobold", "Kobold", 0.9),
-            new ArchetypeInfo("yeti", "Yeti", 0.8),
-            new ArchetypeInfo("orc", "Orc", 1.1),
-            new ArchetypeInfo("dwarf", "Dwarf", 1.0),
+            new ArchetypeInfo("goblin", "哥布林", 1.3),
+            new ArchetypeInfo("troll", "巨魔", 1.0),
+            new ArchetypeInfo("golem", "魔像", 0.9),
+            new ArchetypeInfo("ogre", "食人魔", 0.9),
+            new ArchetypeInfo("imp", "小恶魔", 0.9),
+            new ArchetypeInfo("kobold", "狗头人", 0.9),
+            new ArchetypeInfo("yeti", "雪人", 0.8),
+            new ArchetypeInfo("orc", "兽人", 1.1),
+            new ArchetypeInfo("dwarf", "矮人", 1.0),
         };
 
         public override IReadOnlyList<ArchetypeInfo> Archetypes => ArchetypeList;
 
         public static readonly (string, string)[] Forms =
         {
-            ("goblin", "Goblin"), ("troll", "Troll"), ("golem", "Golem"), ("ogre", "Ogre"), ("imp", "Imp"), ("kobold", "Kobold"), ("yeti", "Yeti"),
-            ("orc", "Orc"), ("dwarf", "Dwarf"),
+            ("goblin", "哥布林"), ("troll", "巨魔"), ("golem", "魔像"), ("ogre", "食人魔"), ("imp", "小恶魔"), ("kobold", "狗头人"), ("yeti", "雪人"),
+            ("orc", "兽人"), ("dwarf", "矮人"),
         };
-        public static readonly (string, string)[] EarKinds = { ("none", "None"), ("elf", "Elf"), ("pointed", "Pointed"), ("round", "Round"), ("floppy", "Floppy") };
-        public static readonly (string, string)[] HornKinds = { ("none", "None"), ("short", "Short"), ("curved", "Curved"), ("ram", "Ram"), ("backswept", "Swept back") };
-        public static readonly (string, string)[] TeethKinds = { ("none", "None"), ("small", "Small"), ("fangs", "Fangs"), ("tusks", "Tusks") };
-        public static readonly (string, string)[] EyeStyles = { ("bead", "Beady"), ("round", "Round"), ("slit", "Slit pupils"), ("glow", "Glowing"), ("button", "Large & cute") };
-        public static readonly (string, string)[] Stances = { ("plantigrade", "Flat-footed"), ("digitigrade", "Toe walking") };
-        public static readonly (string, string)[] TailKinds = { ("none", "None"), ("plain", "Plain"), ("spade", "Spade"), ("tuft", "Tuft"), ("club", "Club") };
-        public static readonly (string, string)[] BackKinds = { ("none", "None"), ("mane", "Mane"), ("spikes", "Spikes"), ("crystals", "Crystals"), ("wings", "Wings") };
-        public static readonly (string, string)[] Weapons = { ("none", "None"), ("club", "Club"), ("spear", "Spear"), ("dagger", "Dagger"), ("staff", "Staff"), ("axe", "Axe"), ("hammer", "Hammer") };
-        public static readonly (string, string)[] Outfits = { ("none", "None"), ("loincloth", "Loincloth"), ("belt", "Belt"), ("tunic", "Tunic"), ("armor", "Armor"), ("robe", "Robe") };
-        public static readonly (string, string)[] NoseShapes = { ("pad", "Pad"), ("round", "Round"), ("long", "Long"), ("flat", "Flat") };
-        public static readonly (string, string)[] Metals = { ("steel", "Steel"), ("iron", "Iron"), ("bronze", "Bronze"), ("gold", "Gold") };
-        public static readonly (string, string)[] Helmets = { ("none", "None"), ("cap", "Cap"), ("helmet", "Helmet"), ("horned", "Horned"), ("hood", "Hood"), ("crown", "Crown") };
+        public static readonly (string, string)[] EarKinds = { ("none", "无"), ("elf", "精灵"), ("pointed", "尖耳"), ("round", "圆"), ("floppy", "垂耳") };
+        public static readonly (string, string)[] HornKinds = { ("none", "无"), ("short", "短"), ("curved", "弯角"), ("ram", "盘角"), ("backswept", "后掠") };
+        public static readonly (string, string)[] TeethKinds = { ("none", "无"), ("small", "小"), ("fangs", "獠牙"), ("tusks", "獠牙") };
+        public static readonly (string, string)[] EyeStyles = { ("bead", "珠状"), ("round", "圆"), ("slit", "竖瞳"), ("glow", "发光"), ("button", "大而可爱") };
+        public static readonly (string, string)[] Stances = { ("plantigrade", "跖行"), ("digitigrade", "趾行") };
+        public static readonly (string, string)[] TailKinds = { ("none", "无"), ("plain", "素色"), ("spade", "铲形"), ("tuft", "毛簇"), ("club", "棒状") };
+        public static readonly (string, string)[] BackKinds = { ("none", "无"), ("mane", "鬃毛"), ("spikes", "尖刺"), ("crystals", "水晶"), ("wings", "翅膀") };
+        public static readonly (string, string)[] Weapons = { ("none", "无"), ("club", "棍棒"), ("spear", "长矛"), ("dagger", "匕首"), ("staff", "法杖"), ("axe", "战斧"), ("hammer", "战锤") };
+        public static readonly (string, string)[] Outfits = { ("none", "无"), ("loincloth", "缠腰布"), ("belt", "腰带"), ("tunic", "短袍"), ("armor", "盔甲"), ("robe", "长袍") };
+        public static readonly (string, string)[] NoseShapes = { ("pad", "肉垫"), ("round", "圆"), ("long", "长"), ("flat", "扁平") };
+        public static readonly (string, string)[] Metals = { ("steel", "钢"), ("iron", "铁"), ("bronze", "青铜"), ("gold", "金色") };
+        public static readonly (string, string)[] Helmets = { ("none", "无"), ("cap", "便帽"), ("helmet", "头盔"), ("horned", "角盔"), ("hood", "兜帽"), ("crown", "王冠") };
 
         protected override GeneSchema CreateSchema()
         {
             var b = new GeneSchemaBuilder(Id);
-            b.Group("body", "Body", GeneStream.Anatomy)
-             .Choice("form", "Body type", Forms, "goblin", "Archetype used as a template for proportions and features when rerolling.", 0.05)
-             .Float("size", "Size", 0, 1, 0.45, "Overall size in logical pixels.", 0.08)
-             .Float("mass", "Mass", 0, 1, 0.5, "Slender to heavy.", 0.1)
-             .Float("posture", "Posture", 0, 1, 0.3, "Upright to deeply hunched.", 0.1)
-             .Float("torso.length", "Torso length", 0, 1, 0.5, "", 0.1)
-             .Float("torso.shoulders", "Torso shoulders", 0, 1, 0.5, "", 0.1)
-             .Float("torso.belly", "Torso belly", 0, 1, 0.35, "", 0.1);
-            b.Group("head", "Head", GeneStream.Anatomy)
-             .Float("head.size", "Head size", 0, 1, 0.5, "", 0.1)
-             .Float("head.round", "Head round", 0, 1, 0.55, "", 0.1)
-             .Float("head.snout", "Head snout", 0, 1, 0.25, "Flat face to a lizard-like muzzle.", 0.1)
-             .Float("head.nose", "Head nose", 0, 1, 0.5, "Nose size.", 0.1)
-             .Choice("head.noseShape", "Head nose shape", NoseShapes, "pad", "Animal nose on the muzzle or humanoid nose on the face.", 0.08)
-             .Float("head.jaw", "Head jaw", 0, 1, 0.5, "", 0.1)
-             .Float("head.brow", "Head brow", 0, 1, 0.4, "", 0.1)
-             .Choice("head.teeth", "Head teeth", TeethKinds, "small", "", 0.1)
-             .Float("head.eyeSize", "Head eye size", 0, 1, 0.5, "", 0.1)
-             .Choice("head.eyeStyle", "Head eye style", EyeStyles, "round", "", 0.08);
-            b.Group("ears", "Ears & horns", GeneStream.Anatomy)
-             .Choice("head.ears", "Head ears", EarKinds, "elf", "", 0.1)
-             .Float("head.earSize", "Head ear size", 0, 1, 0.5, "", 0.1)
-             .Choice("head.horns", "Head horns", HornKinds, "none", "", 0.1)
-             .Float("head.hornSize", "Head horn size", 0, 1, 0.5, "", 0.1);
-            b.Group("arms", "Arms", GeneStream.Anatomy)
-             .Float("arms.length", "Arms length", 0, 1, 0.5, "Short arms to ground-reaching troll arms.", 0.1)
-             .Float("arms.thickness", "Arms thickness", 0, 1, 0.5, "", 0.1)
-             .Float("arms.hands", "Arms hands", 0, 1, 0.5, "", 0.1)
-             .Float("arms.claws", "Arms claws", 0, 1, 0.2, "", 0.1)
-             .Choice("gear.weapon", "Gear weapon", Weapons, "none", "Procedural item held in the right hand.", 0.1)
-             .Float("gear.size", "Gear size", 0, 1, 0.5, "", 0.1);
-            b.Group("legs", "Legs", GeneStream.Anatomy)
-             .Float("legs.length", "Legs length", 0, 1, 0.45, "", 0.1)
-             .Float("legs.thickness", "Legs thickness", 0, 1, 0.5, "", 0.1)
-             .Choice("legs.stance", "Legs stance", Stances, "plantigrade", "", 0.08)
-             .Float("legs.feet", "Legs feet", 0, 1, 0.5, "", 0.1);
-            b.Group("tail", "Tail", GeneStream.Anatomy)
-             .Choice("tail.kind", "Tail kind", TailKinds, "none", "", 0.1)
-             .Float("tail.length", "Tail length", 0, 1, 0.5, "", 0.1)
-             .Choice("back.feature", "Back feature", BackKinds, "none", "", 0.1)
-             .Float("back.size", "Back size", 0, 1, 0.5, "", 0.1);
-            b.Group("outfit", "Outfit", GeneStream.Anatomy)
-             .Choice("gear.outfit", "Gear outfit", Outfits, "none", "Loincloth, belt, tunic, armor or robe in a separate fabric color.", 0.1)
-             .Choice("gear.helmet", "Gear helmet", Helmets, "none", "", 0.1)
-             .Bool("gear.shield", "Gear shield", false, "Round shield on the left arm.", 0.08)
-             .Bool("gear.pauldrons", "Gear pauldrons", false, "", 0.08)
-             .Float("head.beard", "Head beard", 0, 1, 0, "Beard length; zero means no beard.", 0.12);
-            b.Group("gearcolor", "Equipment colors", GeneStream.Color)
-             .Hue("color.clothHue", "Color cloth hue", 55, "Hue of clothing, leather and shield covering.")
-             .Float("color.clothSaturation", "Color cloth saturation", 0, 1, 0.4, "", 0.12)
-             .Float("color.clothValue", "Color cloth value", 0, 1, 0.3, "", 0.12)
-             .Choice("color.metal", "Color metal", Metals, "steel", "Material of blades, helmets, armor, shield rims and crowns.", 0.1)
-             .Hue("color.hairHue", "Color hair hue", 40, "Beard and hair hue.")
-             .Float("color.hairSaturation", "Color hair saturation", 0, 1, 0.35, "", 0.12)
-             .Float("color.hairValue", "Color hair value", 0, 1, 0.25, "", 0.12);
+            b.Group("body", "身体", GeneStream.Anatomy)
+             .Choice("form", "体型", Forms, "goblin", "重新生成时用作比例与特征模板的种族原型。", 0.05)
+             .Float("size", "体型", 0, 1, 0.45, "整体尺寸，以逻辑像素计。", 0.08)
+             .Float("mass", "体重", 0, 1, 0.5, "从纤细到沉重。", 0.1)
+             .Float("posture", "姿态", 0, 1, 0.3, "从挺直到深度驼背。", 0.1)
+             .Float("torso.length", "躯干长度", 0, 1, 0.5, "", 0.1)
+             .Float("torso.shoulders", "躯干肩部", 0, 1, 0.5, "", 0.1)
+             .Float("torso.belly", "躯干腹部", 0, 1, 0.35, "", 0.1);
+            b.Group("head", "头部", GeneStream.Anatomy)
+             .Float("head.size", "头部大小", 0, 1, 0.5, "", 0.1)
+             .Float("head.round", "头部圆度", 0, 1, 0.55, "", 0.1)
+             .Float("head.snout", "口鼻长度", 0, 1, 0.25, "从扁平的脸到蜥蜴般的吻部。", 0.1)
+             .Float("head.nose", "鼻子", 0, 1, 0.5, "鼻子的大小。", 0.1)
+             .Choice("head.noseShape", "鼻形", NoseShapes, "pad", "吻部上的兽类鼻子，或脸上的人形鼻子。", 0.08)
+             .Float("head.jaw", "下颌", 0, 1, 0.5, "", 0.1)
+             .Float("head.brow", "眉骨", 0, 1, 0.4, "", 0.1)
+             .Choice("head.teeth", "牙齿", TeethKinds, "small", "", 0.1)
+             .Float("head.eyeSize", "眼睛大小", 0, 1, 0.5, "", 0.1)
+             .Choice("head.eyeStyle", "眼睛样式", EyeStyles, "round", "", 0.08);
+            b.Group("ears", "耳与角", GeneStream.Anatomy)
+             .Choice("head.ears", "耳朵", EarKinds, "elf", "", 0.1)
+             .Float("head.earSize", "耳朵大小", 0, 1, 0.5, "", 0.1)
+             .Choice("head.horns", "角", HornKinds, "none", "", 0.1)
+             .Float("head.hornSize", "角大小", 0, 1, 0.5, "", 0.1);
+            b.Group("arms", "手臂", GeneStream.Anatomy)
+             .Float("arms.length", "手臂长度", 0, 1, 0.5, "从短手臂到垂地长臂的巨魔手臂。", 0.1)
+             .Float("arms.thickness", "手臂粗细", 0, 1, 0.5, "", 0.1)
+             .Float("arms.hands", "手部", 0, 1, 0.5, "", 0.1)
+             .Float("arms.claws", "爪", 0, 1, 0.2, "", 0.1)
+             .Choice("gear.weapon", "武器", Weapons, "none", "右手握持的程序生成道具。", 0.1)
+             .Float("gear.size", "装备大小", 0, 1, 0.5, "", 0.1);
+            b.Group("legs", "腿", GeneStream.Anatomy)
+             .Float("legs.length", "腿长", 0, 1, 0.45, "", 0.1)
+             .Float("legs.thickness", "腿粗", 0, 1, 0.5, "", 0.1)
+             .Choice("legs.stance", "站姿", Stances, "plantigrade", "", 0.08)
+             .Float("legs.feet", "足型", 0, 1, 0.5, "", 0.1);
+            b.Group("tail", "尾巴", GeneStream.Anatomy)
+             .Choice("tail.kind", "尾巴类型", TailKinds, "none", "", 0.1)
+             .Float("tail.length", "尾长", 0, 1, 0.5, "", 0.1)
+             .Choice("back.feature", "背部特征", BackKinds, "none", "", 0.1)
+             .Float("back.size", "背部大小", 0, 1, 0.5, "", 0.1);
+            b.Group("outfit", "装束", GeneStream.Anatomy)
+             .Choice("gear.outfit", "服装", Outfits, "none", "以单独布料颜色绘制的缠腰布、腰带、短袍、盔甲或长袍。", 0.1)
+             .Choice("gear.helmet", "头盔", Helmets, "none", "", 0.1)
+             .Bool("gear.shield", "盾牌", false, "左臂上的圆盾。", 0.08)
+             .Bool("gear.pauldrons", "护肩", false, "", 0.08)
+             .Float("head.beard", "胡须", 0, 1, 0, "胡须长度；为零表示没有胡须。", 0.12);
+            b.Group("gearcolor", "装备颜色", GeneStream.Color)
+             .Hue("color.clothHue", "布料色相", 55, "服装、皮革与盾面的色相。")
+             .Float("color.clothSaturation", "布料饱和度", 0, 1, 0.4, "", 0.12)
+             .Float("color.clothValue", "布料明度", 0, 1, 0.3, "", 0.12)
+             .Choice("color.metal", "金属颜色", Metals, "steel", "刀刃、头盔、盔甲、盾缘与王冠的材质。", 0.1)
+             .Hue("color.hairHue", "毛发色相", 40, "胡须与毛发的色相。")
+             .Float("color.hairSaturation", "毛发饱和度", 0, 1, 0.35, "", 0.12)
+             .Float("color.hairValue", "毛发明度", 0, 1, 0.25, "", 0.12);
             SharedGenes.AddColorGenes(b);
             SharedGenes.AddPatternGenes(b, "hide");
             SharedGenes.AddMotionGenes(b);

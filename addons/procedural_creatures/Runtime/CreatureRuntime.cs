@@ -51,14 +51,14 @@ namespace PixelCreatures.Runtime
             if (!Godot.FileAccess.FileExists(path))
             {
                 var r = new GenomeLoadResult();
-                r.Errors.Add($"File not found: {path}");
+                r.Errors.Add($"找不到文件：{path}");
                 return r;
             }
             using var f = Godot.FileAccess.Open(path, Godot.FileAccess.ModeFlags.Read);
             if (f == null)
             {
                 var r = new GenomeLoadResult();
-                r.Errors.Add($"Could not open file: {path} ({Godot.FileAccess.GetOpenError()})");
+                r.Errors.Add($"无法打开文件：{path}（{Godot.FileAccess.GetOpenError()}）");
                 return r;
             }
             string text = f.GetAsText();
@@ -96,11 +96,11 @@ namespace PixelCreatures.Runtime
             if (!DirAccess.DirExistsAbsolute(dir))
             {
                 var err = DirAccess.MakeDirRecursiveAbsolute(dir);
-                if (err != Error.Ok) return $"Could not create directory {dir}: {err}";
+                if (err != Error.Ok) return $"无法创建目录 {dir}：{err}";
             }
             string json = Serializer.Serialize(genome, meta);
             using var f = Godot.FileAccess.Open(path, Godot.FileAccess.ModeFlags.Write);
-            if (f == null) return $"Could not write file: {path} ({Godot.FileAccess.GetOpenError()})";
+            if (f == null) return $"无法写入文件：{path}（{Godot.FileAccess.GetOpenError()}）";
             f.StoreString(json);
             return null;
         }
@@ -147,7 +147,7 @@ namespace PixelCreatures.Runtime
                     if (t.IsFaulted)
                     {
                         var ex = t.Exception?.GetBaseException();
-                        onError?.Invoke(ex?.Message ?? "Unknown generation error.");
+                        onError?.Invoke(ex?.Message ?? "未知的生成错误。");
                         return;
                     }
                     if (t.IsCanceled) { Discarded++; return; }

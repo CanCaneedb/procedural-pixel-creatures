@@ -145,12 +145,12 @@ namespace PixelCreatures.Core
         public CreatureModel Build(CreatureGenome genome, CancellationToken cancel = default)
         {
             if (!Registry.TryGetFamily(genome.FamilyId, out var family))
-                throw new CreatureBuildException($"Unknown body-plan family '{genome.FamilyId}'.");
+                throw new CreatureBuildException($"未知的体型类别 '{genome.FamilyId}'。");
             if (family.Schema.Fingerprint() != genome.Schema.Fingerprint())
-                throw new CreatureBuildException($"The genome does not match the current schema of family '{genome.FamilyId}'.");
+                throw new CreatureBuildException($"该基因组与类别 '{genome.FamilyId}' 的当前结构定义不匹配。");
             var warnings = new List<string>();
             if (genome.GeneratorVersion != CreatureFramework.GeneratorVersion)
-                warnings.Add($"Genome was created with generator version {genome.GeneratorVersion}; current version is {CreatureFramework.GeneratorVersion}. Appearance may differ.");
+                warnings.Add($"该基因组由生成器版本 {genome.GeneratorVersion} 生成，当前版本为 {CreatureFramework.GeneratorVersion}，外观可能不同。");
 
             ulong modelKey = StableHash.Combine(genome.ContentHash, (ulong)CreatureFramework.GeneratorVersion);
             if (_models.TryGet(modelKey, out var cachedModel) && ReferenceEquals(cachedModel.Family, family))
