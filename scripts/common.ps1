@@ -42,9 +42,13 @@ function Import-Project {
     $imported = Join-Path $RepoRoot '.godot/imported'
     if ((Test-Path -LiteralPath $marker) -and (Test-Path -LiteralPath $imported)) { return }
     Write-Host 'Importing the project for the first start ...'
-    $code = Invoke-Godot @('--headless', '--quiet', '--language', 'en', '--audio-driver', 'Dummy', '--path', $RepoRoot, '--import')
+    # Same reason as the launch in Start.ps1: user://logs may be unwritable, and Godot crashes while
+    # rotating that log before it can import anything.
+    $logFile = Join-Path $RepoRoot '.tools/logs/godot-import.log'
+    New-Item -ItemType Directory -Path (Split-Path -Parent $logFile) -Force | Out-Null
+    $code = Invoke-Godot @('--headless', '--quiet', '--language', 'en', '--audio-driver', 'Dummy', '--path', $RepoRoot, '--log-file', $logFile, '--import')
     if ($code -ne 0 -or -not (Test-Path -LiteralPath $imported)) {
-        throw 'Godot could not import the project. See the messages above; the next start will retry.'
+        throw 'Godot could not import the project. See .tools/logs/godot-import.log; the next start will retry.'
     }
     Set-Content -LiteralPath $marker -Value $Toolchain.godot.version -Encoding ASCII
 }

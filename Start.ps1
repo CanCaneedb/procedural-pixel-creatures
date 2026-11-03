@@ -49,7 +49,12 @@ Windows x64; first setup needs an internet connection. No administrator rights r
     } else { Write-Host '[2/3] Using the existing build.' }
     Import-Project
     if ($PrepareOnly) { Write-Host 'Setup complete. Start.cmd is ready.'; exit 0 }
-    $arguments = @('--path', $RepoRoot) + $GodotArguments
+    # Write the engine log into the project instead of user://logs. Godot rotates its log on startup
+    # by copying the previous file; when the user profile is locked down (sandbox policies, controlled
+    # folder access) that copy is denied and the engine crashes with 0xC0000005 before showing a window.
+    $logFile = Join-Path $RepoRoot '.tools/logs/godot.log'
+    New-Item -ItemType Directory -Path (Split-Path -Parent $logFile) -Force | Out-Null
+    $arguments = @('--path', $RepoRoot, '--log-file', $logFile) + $GodotArguments
     switch ($Mode) {
         'editor' { $arguments += '--editor' }
         'overview' { $arguments += @('--', '--overview') }
@@ -57,7 +62,7 @@ Windows x64; first setup needs an internet connection. No administrator rights r
     }
     Write-Host "[3/3] Starting $Mode ..."
     $code = Invoke-Godot $arguments -NoWait:$NoWait
-    if ($code -ne 0) { throw "Godot ended with exit code $code. Its log is in %APPDATA%/Godot/app_userdata/Procedural Pixel Creature Workshop/logs/godot.log." }
+    if ($code -ne 0) { throw "Godot ended with exit code $code. Its log is in .tools/logs/godot.log." }
     exit 0
 } catch {
     Write-Host ''

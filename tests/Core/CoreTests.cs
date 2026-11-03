@@ -176,21 +176,22 @@ namespace PixelCreatures.Tests
                 return o;
             }
 
-            ExpectError("{ not json", "Invalid JSON", "broken json");
-            ExpectError("[1,2]", "does not contain a JSON object", "array root");
-            ExpectError(Mut(o => o["format"] = "something").ToJsonString(), "file format", "wrong format");
+            // the messages below are the localized (Chinese) ones shown to the user
+            ExpectError("{ not json", "JSON 无效", "broken json");
+            ExpectError("[1,2]", "没有 JSON 对象", "array root");
+            ExpectError(Mut(o => o["format"] = "something").ToJsonString(), "文件格式", "wrong format");
             ExpectError(Mut(o => o.Remove("formatVersion")).ToJsonString(), "formatVersion", "missing version");
-            ExpectError(Mut(o => o["formatVersion"] = 99).ToJsonString(), "format version 99", "newer format");
-            ExpectError(Mut(o => o["generatorVersion"] = 42).ToJsonString(), "generator version 42", "newer generator");
-            ExpectError(Mut(o => o["family"] = "dragons-from-mars").ToJsonString(), "Unknown body-plan family", "unknown family");
-            ExpectError(Mut(o => o["seeds"]!["color"] = "-5").ToJsonString(), "Seed 'color'", "negative seed");
-            ExpectError(Mut(o => o["seeds"]!.AsObject().Remove("motion")).ToJsonString(), "Seed 'motion'", "missing seed");
-            ExpectError(Mut(o => o["genes"]!["size"] = "big").ToJsonString(), "Expected a number", "string for float");
-            ExpectError(Mut(o => o["genes"]!["pattern.dark"] = 3).ToJsonString(), "Boolean", "number for bool");
+            ExpectError(Mut(o => o["formatVersion"] = 99).ToJsonString(), "格式版本为 99", "newer format");
+            ExpectError(Mut(o => o["generatorVersion"] = 42).ToJsonString(), "生成器版本 42", "newer generator");
+            ExpectError(Mut(o => o["family"] = "dragons-from-mars").ToJsonString(), "未知的体型类别", "unknown family");
+            ExpectError(Mut(o => o["seeds"]!["color"] = "-5").ToJsonString(), "种子 'color'", "negative seed");
+            ExpectError(Mut(o => o["seeds"]!.AsObject().Remove("motion")).ToJsonString(), "种子 'motion'", "missing seed");
+            ExpectError(Mut(o => o["genes"]!["size"] = "big").ToJsonString(), "应为数字", "string for float");
+            ExpectError(Mut(o => o["genes"]!["pattern.dark"] = 3).ToJsonString(), "布尔值", "number for bool");
 
             // recoverable problems become warnings
             var w1 = ser.Deserialize(Mut(o => o["genes"]!["size"] = 5.0).ToJsonString());
-            ctx.True(w1.Ok && w1.Warnings.Any(x => x.Contains("clamped")), "out of range clamps with warning: " + w1.Describe());
+            ctx.True(w1.Ok && w1.Warnings.Any(x => x.Contains("已截断")), "out of range clamps with warning: " + w1.Describe());
             ctx.Near(1.0, w1.Genome!.Get("size"), 1e-9, "clamped size");
             var w2 = ser.Deserialize(Mut(o => o["genes"]!.AsObject().Remove("mass")).ToJsonString());
             ctx.True(w2.Ok && w2.Warnings.Any(x => x.Contains("'mass'")), "missing gene defaults with warning");
@@ -227,7 +228,7 @@ namespace PixelCreatures.Tests
             o["species"] = fam;
             string legacy = o.ToJsonString();
             var noMigration = ser.Deserialize(legacy);
-            ctx.True(!noMigration.Ok && noMigration.Errors.Any(e => e.Contains("No migration")), "missing migration must be an explicit error");
+            ctx.True(!noMigration.Ok && noMigration.Errors.Any(e => e.Contains("没有从格式版本")), "missing migration must be an explicit error");
             ser.RegisterMigration(new TestMigrationV0());
             var migrated = ser.Deserialize(legacy);
             ctx.True(migrated.Ok, "migrated load: " + migrated.Describe());
